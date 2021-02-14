@@ -21,6 +21,7 @@ def setup_db(app, database_path=database_path):
 class Project(db.Model):
 
     id = Column(Integer, primary_key=True)
+    name = Column(String)
     kind = Column(String)
     delivery = Column(DateTime)
     words = Column(Integer)
@@ -36,6 +37,7 @@ class Person(db.Model):
     __tablename__ = 'person'
 
     id = Column(Integer, primary_key=True)
+    name = Column(String)
     kind = Column(String)
     email = Column(String)
     ratew = Column(Float)
