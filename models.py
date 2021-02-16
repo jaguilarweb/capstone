@@ -16,20 +16,20 @@ def setup_db(app, database_path=database_path):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
-    db.create_all()
+#    db.create_all()
 
 
 class Project(db.Model):
     __tablename__ = 'project'
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    kind = Column(String)
-    deadline = Column(DateTime)
-    word_count = Column(Integer)
-    hour_count = Column(Float)
-    rate = Column(Float)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    service_id = Column(Integer, ForeignKey('service.id'))
+    name = Column(String, nullable=True)
+    kind = Column(String, nullable=True)
+    deadline = Column(DateTime, nullable=True)
+    word_count = Column(Integer, nullable=True)
+    hour_count = Column(Float, nullable=True)
+    rate = Column(Float, nullable=True)
+    person_id = Column(Integer, ForeignKey('person.id'), nullable=False)
+    service_id = Column(Integer, ForeignKey('service.id'), nullable=False)
     person_child = db.relationship("Person", back_populates='services')
     service_child = db.relationship("Service", back_populates='people')
 
@@ -42,6 +42,7 @@ class Project(db.Model):
         self.rate = rate
         self.person_id = person_id
         self.service_id = service_id
+
 
     def insert(self):
         try:
@@ -90,12 +91,12 @@ class Person(db.Model):
     __tablename__ = 'person'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    kind = Column(String)
-    email = Column(String)
-    ratew = Column(Float)
-    rateh = Column(Float)
-    services = db.relationship("Projects", back_populates="person_child")
+    name = Column(String, nullable=True)
+    kind = Column(String, nullable=True)
+    email = Column(String, nullable=True)
+    ratew = Column(Float, nullable=True)
+    rateh = Column(Float, nullable=True)
+    services = db.relationship("Project", back_populates="person_child")
 
     def __init__(self, name, kind, email, ratew, rateh):
         self.name = name
@@ -149,10 +150,10 @@ class Service(db.Model):
     __tablename__ = 'service'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    source = Column(String)
-    destiny = Column(String)
-    people = db.relationship("Projects", back_populates="service_child")
+    name = Column(String, nullable=True)
+    source = Column(String, nullable=True)
+    destiny = Column(String, nullable=True)
+    people = db.relationship("Project", back_populates="service_child")
 
     def __init__(self, name, source, destiny):
         self.name = name
@@ -189,7 +190,7 @@ class Service(db.Model):
             db.session.close()
 
     def format(self):
-        return{
+        return {
             'id': self.id,
             'name': self.name,
             'source': self.source,

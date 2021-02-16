@@ -1,0 +1,12 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block head %}
+    {{ super() }}
+    {% block title %}Calculate{% endblock %}
+{% endblock %}
+{% block body %}
+    {% for service in services %}
+        <h1>{{ service.name }}</h1>
+    {% endfor %}
+
+{% endblock %}
