@@ -1,19 +1,25 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, render_template, jsonify
 from models import setup_db
+from flask_bootstrap import Bootstrap
 from flask_cors import CORS
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
-    setup_db(app)
+    bootstrap = Bootstrap(app)
+    setup_db(app)    
     CORS(app)
+
+
+    
+
 
 
     @app.route('/')
     def index():
       gretting = "Hello Word"
-      return gretting
+      return render_template('pages/home.html', gretting=gretting)
 
     return app
 
