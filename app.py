@@ -4,22 +4,24 @@ from models import setup_db
 from flask_bootstrap import Bootstrap
 from flask_cors import CORS
 
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
     bootstrap = Bootstrap(app)
-    setup_db(app)    
+    setup_db(app)
     CORS(app)
 
-
-    
-
-
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Headers', 'Content-type, Authorization')
+        response.headers.add('Access-Control_Allow-Methods', 'GET, PATCH, POST, DELETE, OPTIONS')
+        return response
 
     @app.route('/')
     def index():
-      gretting = "Hello Word"
-      return render_template('pages/home.html', gretting=gretting)
+        gretting = "Hello Word"
+        return render_template('pages/home.html', gretting=gretting)
 
     return app
 
