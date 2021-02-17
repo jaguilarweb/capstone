@@ -43,7 +43,6 @@ class Project(db.Model):
         self.person_id = person_id
         self.service_id = service_id
 
-
     def insert(self):
         try:
             db.session.add(self)
@@ -51,8 +50,6 @@ class Project(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def update(self):
         try:
@@ -60,8 +57,6 @@ class Project(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def delete(self):
         try:
@@ -70,8 +65,6 @@ class Project(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def format(self):
         return{
@@ -112,8 +105,6 @@ class Person(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def update(self):
         try:
@@ -121,8 +112,6 @@ class Person(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def delete(self):
         try:
@@ -131,8 +120,6 @@ class Person(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def format(self):
         return{
@@ -167,8 +154,6 @@ class Service(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def update(self):
         try:
@@ -176,8 +161,6 @@ class Service(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def delete(self):
         try:
@@ -186,8 +169,6 @@ class Service(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-        finally:
-            db.session.close()
 
     def format(self):
         return {
