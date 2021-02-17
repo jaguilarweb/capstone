@@ -76,7 +76,7 @@ def get_services():
 @app.route('/api/services', methods=['POST'])
 def create_services():
 
-    service= {}
+    service = {}
     try:
         body = request.get_json()
         name = body.get('name', None)
@@ -91,7 +91,7 @@ def create_services():
         abort(404)
      
     finally:
-        db.session.close()
+        new_service.close()
         if request.path == '/api/services':
 
             return jsonify({
@@ -101,6 +101,41 @@ def create_services():
 
     return render_template('pages/services.html', services=service)
 
+#----------------------------------------------------
+# Handler PATCH request services
+#----------------------------------------------------
+
+@app.route('/services/<int:service_id>', methods=['PATCH'])
+@app.route('/api/services/<int:service_id>', methods=['PATCH'])
+def update_services(service_id):
+
+    service = {}
+    try:
+        body = request.get_json()
+        name = body.get('name', None)
+        source = body.get('source', None)
+        destiny = body.get('destiny', None)
+        
+        up_service = Service.query.filter(Service.id == service_id).one_or_none()
+        up_service.name = name
+        up_service.source = source
+        up_service.destiny = destiny
+        up_service.update()
+        service = up_service.format()
+
+    except:
+        abort(401)
+     
+    finally:
+        up_service.close()
+        if request.path == '/api/services/' + str(service_id):
+
+            return jsonify({
+                'success': True,
+                'services': service
+            }), 200
+
+    return render_template('pages/services.html', services=service)
 
 
 # Default port:
