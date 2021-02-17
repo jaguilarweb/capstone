@@ -74,7 +74,7 @@ def get_services():
 
 @app.route('/services', methods=['POST'])
 @app.route('/api/services', methods=['POST'])
-def create_services():
+def create_service():
 
     service = {}
     try:
@@ -107,7 +107,7 @@ def create_services():
 
 @app.route('/services/<int:service_id>', methods=['PATCH'])
 @app.route('/api/services/<int:service_id>', methods=['PATCH'])
-def update_services(service_id):
+def update_service(service_id):
 
     service = {}
     try:
@@ -143,7 +143,7 @@ def update_services(service_id):
 
 @app.route('/services/<int:service_id>', methods=['DELETE'])
 @app.route('/api/services/<int:service_id>', methods=['DELETE'])
-def delete_services(service_id):
+def delete_service(service_id):
     service = {}
     try:
         
@@ -164,9 +164,132 @@ def delete_services(service_id):
             }), 200
 
     return render_template('pages/services.html', services=service)    
-    
-    
-    
+
+#----------------------------------------------------
+# Handler GET request person
+#----------------------------------------------------
+
+
+@app.route('/people', methods=['GET'])
+@app.route('/api/people', methods=['GET'])
+def get_people():
+    error = False
+    people_list = []
+    try:
+        selection = Person.query.all()
+    except:
+        error = True
+    if error:
+        abort(404)
+    else:        
+        if request.path == '/api/people':
+            people_list = [person.format() for person in selection]
+            return jsonify({
+                'success': True,
+                'person': people_list
+            }), 200
+            
+        return render_template('pages/people.html', people=selection)
+
+#----------------------------------------------------
+# Handler POST request person
+#----------------------------------------------------
+
+
+@app.route('/people', methods=['POST'])
+@app.route('/api/people', methods=['POST'])
+def create_person():
+
+    person = {}
+    try:
+        body = request.get_json()
+        name = body.get('name', None)
+        kind = body.get('kind', None)
+        email = body.get('email', None)
+        ratew = body.get('ratew', None)
+        rateh = body.get('rateh', None)
+        
+        new_person = Person(name=name, kind=kind, email=email, ratew=ratew, rateh=rateh)
+        new_person.insert()
+        person = Person.query.filter(Person.id == new_person.id).one_or_none()
+        
+    except:
+        abort(404)
+     
+    finally:
+        new_person.close()
+        if request.path == '/api/people':
+
+            return jsonify({
+                'success': True,
+                'person': person.format()
+            }), 200
+
+    return render_template('pages/people.html', people=person)
+
+#----------------------------------------------------
+# Handler PATCH request person
+#----------------------------------------------------
+
+@app.route('/people/<int:person_id>', methods=['PATCH'])
+@app.route('/api/people/<int:person_id>', methods=['PATCH'])
+def update_person(person_id):
+
+    person = {}
+    try:
+        body = request.get_json()
+        ratew = body.get('ratew', None)
+        rateh = body.get('rateh', None)
+        
+        up_person = Person.query.filter(Person.id == person_id).one_or_none()
+        up_person.ratew = ratew
+        up_person.rateh = rateh
+        up_person.update()
+        person = up_person.format()
+
+    except:
+        abort(401)
+     
+    finally:
+        up_person.close()
+        if request.path == '/api/people/' + str(person_id):
+
+            return jsonify({
+                'success': True,
+                'person': person
+            }), 200
+
+    return render_template('pages/people.html', people=person)
+
+#----------------------------------------------------
+# Handler DELETE request services
+#----------------------------------------------------
+
+@app.route('/people/<int:person_id>', methods=['DELETE'])
+@app.route('/api/people/<int:person_id>', methods=['DELETE'])
+def delete_person(person_id):
+    person = {}
+    try:
+        
+        person_search = Person.query.filter(Person.id == person_id).one_or_none()
+        person = person_search.format()
+        person_search.delete() 
+
+    except:
+        abort(401)
+     
+    finally:
+        person_search.close()
+        if request.path == '/api/people/' + str(person_id):
+
+            return jsonify({
+                'success': True,
+                'person': person
+            }), 200
+
+    return render_template('pages/people.html', people=person)    
+
+
 
 # Default port:
 if __name__ == '__main__':

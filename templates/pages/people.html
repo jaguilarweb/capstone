@@ -1,0 +1,12 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block head %}
+    {{ super() }}
+    {% block title %}Calculate{% endblock %}
+{% endblock %}
+{% block body %}
+    {% for person in people %}
+        <h1>{{ person.name }}</h1>
+    {% endfor %}
+
+{% endblock %}

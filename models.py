@@ -121,6 +121,9 @@ class Person(db.Model):
             db.session.rollback()
             print(sys.exc_info())
 
+    def close(self):
+        db.session.close()
+
     def format(self):
         return{
             'id': self.id,
@@ -128,8 +131,7 @@ class Person(db.Model):
             'kind': self.kind,
             'email': self.email,
             'ratew': self.ratew,
-            'rateh': self.rateh,
-            'service': self.services
+            'rateh': self.rateh
         }
 
 
