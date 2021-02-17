@@ -137,6 +137,36 @@ def update_services(service_id):
 
     return render_template('pages/services.html', services=service)
 
+#----------------------------------------------------
+# Handler DELETE request services
+#----------------------------------------------------
+
+@app.route('/services/<int:service_id>', methods=['DELETE'])
+@app.route('/api/services/<int:service_id>', methods=['DELETE'])
+def delete_services(service_id):
+    service = {}
+    try:
+        
+        service_search = Service.query.filter(Service.id == service_id).one_or_none()
+        service = service_search.format()
+        service_search.delete() 
+
+    except:
+        abort(401)
+     
+    finally:
+        service_search.close()
+        if request.path == '/api/services/' + str(service_id):
+
+            return jsonify({
+                'success': True,
+                'services': service
+            }), 200
+
+    return render_template('pages/services.html', services=service)    
+    
+    
+    
 
 # Default port:
 if __name__ == '__main__':
