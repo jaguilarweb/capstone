@@ -65,8 +65,41 @@ def get_services():
                 'services': service_list
             }), 200
             
-        return render_template('pages/services.html', services=services)
+        return render_template('pages/services.html', services=selection)
 
+#----------------------------------------------------
+# Handler POST request services
+#----------------------------------------------------
+
+
+@app.route('/services', methods=['POST'])
+@app.route('/api/services', methods=['POST'])
+def create_services():
+
+    service= {}
+    try:
+        body = request.get_json()
+        name = body.get('name', None)
+        source = body.get('source', None)
+        destiny = body.get('destiny', None)
+        
+        new_service = Service(name=name, source=source, destiny=destiny)
+        new_service.insert()
+        service = Service.query.filter(Service.id == new_service.id).one_or_none()
+        
+    except:
+        abort(404)
+     
+    finally:
+        db.session.close()
+        if request.path == '/api/services':
+
+            return jsonify({
+                'success': True,
+                'services': service.format()
+            }), 200
+
+    return render_template('pages/services.html', services=service)
 
 
 
