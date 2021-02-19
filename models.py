@@ -24,7 +24,7 @@ class Project(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=True)
     kind = Column(String, nullable=True)
-    deadline = Column(DateTime, nullable=True)
+    deadline = Column(DateTime, default=datetime.utcnow, nullable=True)
     word_count = Column(Integer, nullable=True)
     hour_count = Column(Float, nullable=True)
     rate = Column(Float, nullable=True)
@@ -65,6 +65,9 @@ class Project(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
+
+    def close(self):
+        db.session.close()
 
     def format(self):
         return{

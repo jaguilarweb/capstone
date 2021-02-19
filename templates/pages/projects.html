@@ -1,0 +1,12 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block head %}
+    {{ super() }}
+    {% block title %}Projects{% endblock %}
+{% endblock %}
+{% block body %}
+    {% for project in projects %}
+        <h1>{{ project.name }}</h1>
+    {% endfor %}
+
+{% endblock %}

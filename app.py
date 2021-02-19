@@ -40,15 +40,151 @@ def index():
     gretting = "Hello Word"
     return render_template('pages/home.html', gretting=gretting)
 
+#----------------------------------------------------
+# Handler GET request projects
+#----------------------------------------------------
+
+
+@app.route('/projects', methods=['GET'])
+@app.route('/api/projects', methods=['GET'])
+def get_projects():
+    error = False
+    project_list = []
+    try:
+        selection = Project.query.all()
+    except:
+        error = True
+    if error:
+        abort(404)
+    else:        
+        if request.path == '/api/projects':
+            project_list = [project.format() for project in selection]
+            return jsonify({
+                'success': True,
+                'projects': project_list
+            }), 200
+            
+        return render_template('pages/projects.html', projects=selection)
 
 #----------------------------------------------------
-# Handler GET request services
+# Handler POST request project
+#----------------------------------------------------
+
+
+@app.route('/projects', methods=['POST'])
+@app.route('/api/projects', methods=['POST'])
+def create_project():
+
+    project = {}
+    try:
+        body = request.get_json()
+        name = body.get('name', None)
+        kind = body.get('kind', None)
+        deadline = body.get('deadline', None)
+        word_count = body.get('word_count', None)
+        hour_count = body.get('hour_count', None)
+        rate = body.get('rate', None)
+        person_id = body.get('person_id', None)
+        service_id = body.get('service_id', None)
+        
+        new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
+        new_project.insert()
+        project = Project.query.filter(Project.id == new_project.id).one_or_none()
+        
+    except:
+        abort(404)
+     
+    finally:
+        new_project.close()
+        if request.path == '/api/projects':
+
+            return jsonify({
+                'success': True,
+                'projects': project.format()
+            }), 200
+
+    return render_template('pages/projects.html', projects=project)
+
+#----------------------------------------------------
+# Handler PATCH request project
+#----------------------------------------------------
+
+@app.route('/projects/<int:project_id>', methods=['PATCH'])
+@app.route('/api/projects/<int:project_id>', methods=['PATCH'])
+def update_project(project_id):
+
+    project = {}
+    try:
+        body = request.get_json()
+        deadline = body.get('deadline', None)
+        word_count = body.get('word_count', None)
+        hour_count = body.get('hour_count', None)
+        rate = body.get('rate', None)
+
+        up_project = Project.query.filter(Project.id == project_id).one_or_none()
+        up_project.deadline = deadline
+        up_project.word_count = word_count
+        up_project.hour_count = hour_count
+        up_project.rate = rate
+        up_project.update()
+        project = up_project.format()
+
+    except:
+        abort(401)
+     
+    finally:
+        up_project.close()
+        if request.path == '/api/projects/' + str(project_id):
+
+            return jsonify({
+                'success': True,
+                'project': project
+            }), 200
+
+    return render_template('pages/projects.html', projects=project)
+
+#----------------------------------------------------
+# Handler DELETE request project
+#----------------------------------------------------
+
+@app.route('/projects/<int:project_id>', methods=['DELETE'])
+@app.route('/api/projects/<int:project_id>', methods=['DELETE'])
+def delete_project(project_id):
+    project= {}
+    try:
+        
+        project_search = Project.query.filter(Project.id == project_id).one_or_none()
+        project = project_search.format()
+        project_search.delete() 
+        
+    except Exception as e:
+        print(e)
+        pass
+    
+    # except:
+    #     abort(401)
+     
+    finally:
+        project_search.close()
+        if request.path == '/api/projects/' + str(project_id):
+
+            return jsonify({
+                'success': True,
+                'projects': project
+            }), 200
+
+    return render_template('pages/projects.html', projects=project)    
+
+
+
+#----------------------------------------------------
+# Handler GET request service
 #----------------------------------------------------
 
 
 @app.route('/services', methods=['GET'])
 @app.route('/api/services', methods=['GET'])
-def get_services():
+def get_service():
     error = False
     service_list = []
     try:
@@ -68,7 +204,7 @@ def get_services():
         return render_template('pages/services.html', services=selection)
 
 #----------------------------------------------------
-# Handler POST request services
+# Handler POST request service
 #----------------------------------------------------
 
 
@@ -102,7 +238,7 @@ def create_service():
     return render_template('pages/services.html', services=service)
 
 #----------------------------------------------------
-# Handler PATCH request services
+# Handler PATCH request service
 #----------------------------------------------------
 
 @app.route('/services/<int:service_id>', methods=['PATCH'])
@@ -138,7 +274,7 @@ def update_service(service_id):
     return render_template('pages/services.html', services=service)
 
 #----------------------------------------------------
-# Handler DELETE request services
+# Handler DELETE request service
 #----------------------------------------------------
 
 @app.route('/services/<int:service_id>', methods=['DELETE'])
@@ -262,7 +398,7 @@ def update_person(person_id):
     return render_template('pages/people.html', people=person)
 
 #----------------------------------------------------
-# Handler DELETE request services
+# Handler DELETE request person
 #----------------------------------------------------
 
 @app.route('/people/<int:person_id>', methods=['DELETE'])
