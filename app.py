@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, render_template, jsonify
+from flask import Flask, flash, request, abort, render_template, jsonify
 from models import *
 from flask_bootstrap import Bootstrap
 from flask_cors import CORS
@@ -16,6 +16,8 @@ def create_app(test_config=None):
     bootstrap = Bootstrap(app)
     setup_db(app)
     CORS(app)
+ 
+
     
     return app
 
@@ -30,6 +32,20 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-type, Authorization')
     response.headers.add('Access-Control_Allow-Methods', 'GET, PATCH, POST, DELETE, OPTIONS')
     return response
+
+#----------------------------------------------------------------------------#
+# Filters.
+#----------------------------------------------------------------------------#
+
+def format_datetime(value, format='medium'):
+  date = dateutil.parser.parse(value)
+  if format == 'full':
+      format="EEEE MMMM, d, y 'at' h:mma"
+  elif format == 'medium':
+      format="EE MM, dd, y h:mma"
+  return babel.dates.format_datetime(date, format)
+
+app.jinja_env.filters['datetime'] = format_datetime
 
 #----------------------------------------------------
 # Endpoints
@@ -48,22 +64,26 @@ def index():
 @app.route('/projects', methods=['GET'])
 @app.route('/api/projects', methods=['GET'])
 def get_projects():
-    error = False
+
     project_list = []
     try:
         selection = Project.query.all()
-    except:
-        error = True
-    if error:
-        abort(404)
-    else:        
+
+        if len(selection) == 0:
+            flash('There are not projects.')
+
+            
+    except Exception as e:
+        print(e)        
+
+    finally:
         if request.path == '/api/projects':
             project_list = [project.format() for project in selection]
             return jsonify({
                 'success': True,
                 'projects': project_list
             }), 200
-            
+        
         return render_template('pages/projects.html', projects=selection)
 
 #----------------------------------------------------
@@ -87,12 +107,14 @@ def create_project():
         person_id = body.get('person_id', None)
         service_id = body.get('service_id', None)
         
+        
         new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
+        
         new_project.insert()
         project = Project.query.filter(Project.id == new_project.id).one_or_none()
         
     except:
-        abort(404)
+        abort(422)
      
     finally:
         new_project.close()
@@ -114,14 +136,19 @@ def create_project():
 def update_project(project_id):
 
     project = {}
-    try:
-        body = request.get_json()
-        deadline = body.get('deadline', None)
-        word_count = body.get('word_count', None)
-        hour_count = body.get('hour_count', None)
-        rate = body.get('rate', None)
 
-        up_project = Project.query.filter(Project.id == project_id).one_or_none()
+    body = request.get_json()
+    deadline = body.get('deadline', None)
+    word_count = body.get('word_count', None)
+    hour_count = body.get('hour_count', None)
+    rate = body.get('rate', None)
+    
+    up_project = Project.query.filter(Project.id == project_id).one_or_none()
+
+    if up_project is None:
+        abort(404)
+
+    try:
         up_project.deadline = deadline
         up_project.word_count = word_count
         up_project.hour_count = hour_count
@@ -130,7 +157,7 @@ def update_project(project_id):
         project = up_project.format()
 
     except:
-        abort(401)
+        abort(422)
      
     finally:
         up_project.close()
@@ -151,18 +178,18 @@ def update_project(project_id):
 @app.route('/api/projects/<int:project_id>', methods=['DELETE'])
 def delete_project(project_id):
     project= {}
-    try:
-        
-        project_search = Project.query.filter(Project.id == project_id).one_or_none()
+
+    project_search = Project.query.filter(Project.id == project_id).one_or_none()
+    
+    if project_search is None:
+        abort(404)
+
+    try: 
         project = project_search.format()
         project_search.delete() 
         
-    except Exception as e:
-        print(e)
-        pass
-    
-    # except:
-    #     abort(401)
+    except:
+        abort(422)
      
     finally:
         project_search.close()
@@ -189,11 +216,15 @@ def get_service():
     service_list = []
     try:
         selection = Service.query.all()
-    except:
-        error = True
-    if error:
-        abort(404)
-    else:        
+
+        if len(selection) == 0:
+            flash('There are not services.')
+
+            
+    except Exception as e:
+        print(e)        
+
+    finally:      
         if request.path == '/api/services':
             service_list = [service.format() for service in selection]
             return jsonify({
@@ -224,7 +255,7 @@ def create_service():
         service = Service.query.filter(Service.id == new_service.id).one_or_none()
         
     except:
-        abort(404)
+        abort(422)
      
     finally:
         new_service.close()
@@ -246,13 +277,18 @@ def create_service():
 def update_service(service_id):
 
     service = {}
-    try:
-        body = request.get_json()
-        name = body.get('name', None)
-        source = body.get('source', None)
-        destiny = body.get('destiny', None)
+
+    body = request.get_json()
+    name = body.get('name', None)
+    source = body.get('source', None)
+    destiny = body.get('destiny', None)
+
+    up_service = Service.query.filter(Service.id == service_id).one_or_none()
+    
+    if up_service is None:
+        abort(404)
         
-        up_service = Service.query.filter(Service.id == service_id).one_or_none()
+    try:
         up_service.name = name
         up_service.source = source
         up_service.destiny = destiny
@@ -260,7 +296,7 @@ def update_service(service_id):
         service = up_service.format()
 
     except:
-        abort(401)
+        abort(422)
      
     finally:
         up_service.close()
@@ -281,14 +317,17 @@ def update_service(service_id):
 @app.route('/api/services/<int:service_id>', methods=['DELETE'])
 def delete_service(service_id):
     service = {}
+    service_search = Service.query.filter(Service.id == service_id).one_or_none()
+    
+    if service_search is None:
+        abort(404)
+
     try:
-        
-        service_search = Service.query.filter(Service.id == service_id).one_or_none()
         service = service_search.format()
         service_search.delete() 
 
     except:
-        abort(401)
+        abort(422)
      
     finally:
         service_search.close()
@@ -309,15 +348,19 @@ def delete_service(service_id):
 @app.route('/people', methods=['GET'])
 @app.route('/api/people', methods=['GET'])
 def get_people():
-    error = False
+ 
     people_list = []
     try:
         selection = Person.query.all()
-    except:
-        error = True
-    if error:
-        abort(404)
-    else:        
+
+        if len(selection) == 0:
+            flash('There are not people.')
+
+            
+    except Exception as e:
+        print(e)        
+
+    finally:      
         if request.path == '/api/people':
             people_list = [person.format() for person in selection]
             return jsonify({
@@ -350,7 +393,7 @@ def create_person():
         person = Person.query.filter(Person.id == new_person.id).one_or_none()
         
     except:
-        abort(404)
+        abort(422)
      
     finally:
         new_person.close()
@@ -372,19 +415,23 @@ def create_person():
 def update_person(person_id):
 
     person = {}
+    body = request.get_json()
+    ratew = body.get('ratew', None)
+    rateh = body.get('rateh', None)
+
+    up_person = Person.query.filter(Person.id == person_id).one_or_none()
+    
+    if up_person is None:
+        abort(404)
+    
     try:
-        body = request.get_json()
-        ratew = body.get('ratew', None)
-        rateh = body.get('rateh', None)
-        
-        up_person = Person.query.filter(Person.id == person_id).one_or_none()
         up_person.ratew = ratew
         up_person.rateh = rateh
         up_person.update()
         person = up_person.format()
 
     except:
-        abort(401)
+        abort(422)
      
     finally:
         up_person.close()
@@ -405,15 +452,19 @@ def update_person(person_id):
 @app.route('/api/people/<int:person_id>', methods=['DELETE'])
 def delete_person(person_id):
     person = {}
-    try:
-        
-        person_search = Person.query.filter(Person.id == person_id).one_or_none()
-        person = person_search.format()
-        person_search.delete() 
 
+    person_search = Person.query.filter(Person.id == person_id).one_or_none()
+    
+    if person_search is None:
+        abort(404)
+
+    try:
+        person = person_search.format()
+        person_search.delete()
+        
     except:
-        abort(401)
-     
+        abort(422) 
+        
     finally:
         person_search.close()
         if request.path == '/api/people/' + str(person_id):
@@ -423,8 +474,60 @@ def delete_person(person_id):
                 'person': person
             }), 200
 
-    return render_template('pages/people.html', people=person)    
+        return render_template('pages/people.html', people=person)
 
+
+
+#-------------------------------------------
+# ERROR Handler
+#-------------------------------------------
+
+@app.errorhandler(400)
+def bad_request(error):
+    return jsonify({
+        "success": False, 
+        "error": 400,
+        "message": "Bad request"
+        }), 400
+
+@app.errorhandler(404)
+def not_found(error):    
+    if request.path.startswith("/api/"): 
+        return jsonify({
+            "success": False, 
+            "error": 404,
+            "message": "Resource Not found"
+            }), 404
+    else:
+        return render_template('errors/404.html'), 404
+
+
+@app.errorhandler(422)
+def unprocessable(error):
+    return jsonify({
+        "success": False, 
+        "error": 422,
+        "message": "Unprocessable"
+        }), 422
+
+@app.errorhandler(405)
+def not_found(error):
+    return jsonify({
+        "success": False, 
+        "error": 405,
+        "message": "Method not allowed"
+        }), 405
+
+@app.errorhandler(500)
+def not_found(error):
+    if request.path.startswith("/api/"):    
+        return jsonify({
+            "success": False, 
+            "error": 500,
+            "message": "Internal Server Error"
+            }), 500
+    else:
+        return render_template('errors/500.html'), 500
 
 
 # Default port:

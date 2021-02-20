@@ -3,8 +3,21 @@
 {% block head %}
     {{ super() }}
     {% block title %}Projects{% endblock %}
+
+
 {% endblock %}
 {% block body %}
+
+    {% with projects = get_flashed_messages() %}
+        {% if projects %}
+            <ul class=flashes>
+            {% for message in projects %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    
     {% for project in projects %}
         <h1>{{ project.name }}</h1>
     {% endfor %}
