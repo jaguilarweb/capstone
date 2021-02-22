@@ -1,0 +1,35 @@
+{% extends 'layouts/main.html' %}
+{% block title %}
+	{{ super() }}
+	People
+{% endblock %}
+{% block content %}
+  <div class="form-wrapper">
+    <form class="form" method="POST" action="/people">
+      {{ form.hidden_tag() }}
+      <h3 class="form-heading">Add person</h3>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        {{ form.name(class_ = 'form-control', autofocus = true) }}
+      </div>
+
+      <div class="form-group">
+        <label for="ratew">Email</label>
+        {{ form.email(class_ = 'form-control', autofocus = true) }}
+      </div>
+
+      <div class="form-group">
+        <label for="ratew">Rate x word</label>
+        {{ form.ratew(class_ = 'form-control', autofocus = true) }} USD
+      </div>
+
+      <div class="form-group">
+        <label for="rateh">Rate x hr</label>
+        {{ form.rateh(class_ = 'form-control', autofocus = true) }} USD
+      </div>
+ 
+      <input type="submit" value="Add Person" class="btn btn-primary btn-lg btn-block">
+    </form>
+  </div>
+{% endblock %}

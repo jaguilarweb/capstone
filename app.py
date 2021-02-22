@@ -1,7 +1,9 @@
 import os
-from flask import Flask, flash, request, abort, render_template, jsonify
+from flask import Flask, flash, request, abort, render_template, jsonify, url_for, redirect
 from models import *
 from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from forms import *
 from flask_cors import CORS
 
 
@@ -17,7 +19,8 @@ def create_app(test_config=None):
     setup_db(app)
     CORS(app)
  
-
+    #Temporaly to obtain flash message. Change and delete.
+    app.secret_key = 'many random bytes'
     
     return app
 
@@ -131,7 +134,7 @@ def create_project():
 # Handler PATCH request project
 #----------------------------------------------------
 
-@app.route('/projects/<int:project_id>', methods=['PATCH'])
+@app.route('/projects/<int:project_id>', methods=['PATCH', 'POST'])
 @app.route('/api/projects/<int:project_id>', methods=['PATCH'])
 def update_project(project_id):
 
@@ -174,7 +177,7 @@ def update_project(project_id):
 # Handler DELETE request project
 #----------------------------------------------------
 
-@app.route('/projects/<int:project_id>', methods=['DELETE'])
+@app.route('/projects/<int:project_id>', methods=['DELETE', 'POST'])
 @app.route('/api/projects/<int:project_id>', methods=['DELETE'])
 def delete_project(project_id):
     project= {}
@@ -211,7 +214,7 @@ def delete_project(project_id):
 
 @app.route('/services', methods=['GET'])
 @app.route('/api/services', methods=['GET'])
-def get_service():
+def get_services():
     error = False
     service_list = []
     try:
@@ -272,7 +275,7 @@ def create_service():
 # Handler PATCH request service
 #----------------------------------------------------
 
-@app.route('/services/<int:service_id>', methods=['PATCH'])
+@app.route('/services/<int:service_id>', methods=['PATCH', 'GET'])
 @app.route('/api/services/<int:service_id>', methods=['PATCH'])
 def update_service(service_id):
 
@@ -313,7 +316,7 @@ def update_service(service_id):
 # Handler DELETE request service
 #----------------------------------------------------
 
-@app.route('/services/<int:service_id>', methods=['DELETE'])
+@app.route('/services/<int:service_id>', methods=['DELETE', 'POST'])
 @app.route('/api/services/<int:service_id>', methods=['DELETE'])
 def delete_service(service_id):
     service = {}
@@ -339,6 +342,29 @@ def delete_service(service_id):
             }), 200
 
     return render_template('pages/services.html', services=service)    
+
+#----------------------------------------------------
+# Handler GET request detail person
+#----------------------------------------------------
+
+
+@app.route('/people/<int:person_id>', methods=['GET'])
+@app.route('/api/people/<int:person_id>', methods=['GET'])
+def get_detail_person(person_id):     
+    form = PersonForm()
+    person = Person.query.filter(Person.id == person_id).one_or_none()
+    
+    if person is None:
+        abort(404)
+
+    if request.path == '/api/people/' + str(person_id):
+
+        return jsonify({
+            'success': True,
+            'person': person
+        }), 200
+
+    return render_template('forms/edit_person.html', person=person, form=form)
 
 #----------------------------------------------------
 # Handler GET request person
@@ -371,6 +397,15 @@ def get_people():
         return render_template('pages/people.html', people=selection)
 
 #----------------------------------------------------
+# Handler GET form to create person
+#----------------------------------------------------
+
+@app.route('/people/create', methods=['GET'])
+def add_new_person():     
+    form = PersonForm()
+    return render_template('forms/add_person.html', form=form)
+
+#----------------------------------------------------
 # Handler POST request person
 #----------------------------------------------------
 
@@ -378,25 +413,37 @@ def get_people():
 @app.route('/people', methods=['POST'])
 @app.route('/api/people', methods=['POST'])
 def create_person():
+    form = PersonForm(request.form)
+    person={}
+    name={}
+    kind={}
+    email={}
+    ratew={}
+    rateh={}
 
-    person = {}
     try:
-        body = request.get_json()
-        name = body.get('name', None)
-        kind = body.get('kind', None)
-        email = body.get('email', None)
-        ratew = body.get('ratew', None)
-        rateh = body.get('rateh', None)
-        
+        if request.path == '/api/people/' + str(person_id):
+            body = request.get_json()
+            name = body.get('name', None)
+            kind = body.get('kind', None)
+            email = body.get('email', None)
+            ratew = body.get('ratew', None)
+            rateh = body.get('rateh', None)
+        else:
+            name = request.form.get('name')
+            kind = request.form.get('kind')
+            email = request.form.get('email')
+            ratew = request.form.get('ratew')
+            rateh = request.form.get('rateh')
+                   
         new_person = Person(name=name, kind=kind, email=email, ratew=ratew, rateh=rateh)
         new_person.insert()
         person = Person.query.filter(Person.id == new_person.id).one_or_none()
-        
+        flash("The new person was created successfully!")
     except:
         abort(422)
      
     finally:
-        new_person.close()
         if request.path == '/api/people':
 
             return jsonify({
@@ -410,26 +457,38 @@ def create_person():
 # Handler PATCH request person
 #----------------------------------------------------
 
-@app.route('/people/<int:person_id>', methods=['PATCH'])
+@app.route('/people/<int:person_id>', methods=['POST', 'PATCH'])
 @app.route('/api/people/<int:person_id>', methods=['PATCH'])
 def update_person(person_id):
-
+    form = PersonForm(request.form)   
     person = {}
-    body = request.get_json()
-    ratew = body.get('ratew', None)
-    rateh = body.get('rateh', None)
+    ratew = {}
+    rateh = {}
+        
+    if request.path == '/api/people/' + str(person_id):
+        body = request.get_json()
+        ratew = body.get('ratew')
+        rateh = body.get('rateh')
+    else:
+        ratew = request.form.get('ratew')
+        rateh = request.form.get('rateh')
 
     up_person = Person.query.filter(Person.id == person_id).one_or_none()
     
     if up_person is None:
         abort(404)
-    
-    try:
-        up_person.ratew = ratew
-        up_person.rateh = rateh
-        up_person.update()
-        person = up_person.format()
 
+    try:
+        if form.validate_on_submit(): 
+            up_person.ratew = ratew
+            up_person.rateh = rateh
+            up_person.update()
+            person = up_person.format()
+            flash("The data was updated successfully!")
+        else:
+            person = up_person.format()
+            flash("Fill with decimal numbers. Please, try again.")
+            
     except:
         abort(422)
      
@@ -442,7 +501,7 @@ def update_person(person_id):
                 'person': person
             }), 200
 
-    return render_template('pages/people.html', people=person)
+    return render_template('forms/edit_person.html', person=person, form=form)
 
 #----------------------------------------------------
 # Handler DELETE request person
@@ -474,8 +533,7 @@ def delete_person(person_id):
                 'person': person
             }), 200
 
-        return render_template('pages/people.html', people=person)
-
+    return render_template('pages/people.html', people=person)
 
 
 #-------------------------------------------

@@ -1,12 +1,49 @@
-{% extends 'bootstrap/base.html' %}
-
-{% block head %}
-    {{ super() }}
-    {% block title %}Calculate{% endblock %}
+{% extends 'layouts/main.html' %}
+{% block title %}
+	{{ super() }}
+	People
 {% endblock %}
-{% block body %}
+
+
+{% block content %}
+
+<ul class="items">
+    <h1>People</h1> 		
+	<a href="people/create" class="btn btn-primary" role="button">New Person</a>
+	<hr/>
     {% for person in people %}
-        <h1>{{ person.name }}</h1>
+	<li>
+		<a href="/people/{{ person.id }}">
+			<i class="fas fa-users"></i>
+			<div class="item">
+				<h5>{{ person.name }} | Rate x W : {{ person.ratew }} | Rate x H : {{ person.rateh }}</h5>
+			</div>
+		</a>			
+	</li>
+	<li>
+		<button class="btn btn-primary delete-button" data-id="{{person.id}}">Delete</button>				
+	</li> 
     {% endfor %}
+</ul>
+{% endblock %}
+
+
+{% block scripts %}
+	{{ super() }}
+
+<script>
+	const deleteBtns = document.querySelectorAll('.delete-button');
+	for (let i = 0; i < deleteBtns.length; i++) {
+		const btn = deleteBtns[i];
+		btn.onclick = function(e) {
+		const personId = e.target.dataset['id'];
+		fetch('/people/' + personId, {
+			method: 'DELETE'
+		}).then(() => {
+			window.location.href = "/people";
+		});
+	}
+}
+</script>
 
 {% endblock %}
