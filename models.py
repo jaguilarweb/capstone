@@ -66,9 +66,6 @@ class Project(db.Model):
             db.session.rollback()
             print(sys.exc_info())
 
-    def close(self):
-        db.session.close()
-
     def format(self):
         return{
             'id': self.id,
@@ -124,9 +121,6 @@ class Person(db.Model):
             db.session.rollback()
             print(sys.exc_info())
 
-    def close(self):
-        db.session.close()
-
     def format(self):
         return{
             'id': self.id,
@@ -175,9 +169,6 @@ class Service(db.Model):
             db.session.rollback()
             print(sys.exc_info())
     
-    def close(self):
-        db.session.close()
-
     def format(self):
         return {
             'id': self.id,

@@ -108,8 +108,7 @@ def create_project():
         hour_count = body.get('hour_count', None)
         rate = body.get('rate', None)
         person_id = body.get('person_id', None)
-        service_id = body.get('service_id', None)
-        
+        service_id = body.get('service_id', None)        
         
         new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
         
@@ -120,9 +119,7 @@ def create_project():
         abort(422)
      
     finally:
-        new_project.close()
         if request.path == '/api/projects':
-
             return jsonify({
                 'success': True,
                 'projects': project.format()
@@ -163,7 +160,6 @@ def update_project(project_id):
         abort(422)
      
     finally:
-        up_project.close()
         if request.path == '/api/projects/' + str(project_id):
 
             return jsonify({
@@ -195,7 +191,6 @@ def delete_project(project_id):
         abort(422)
      
     finally:
-        project_search.close()
         if request.path == '/api/projects/' + str(project_id):
 
             return jsonify({
@@ -261,7 +256,6 @@ def create_service():
         abort(422)
      
     finally:
-        new_service.close()
         if request.path == '/api/services':
 
             return jsonify({
@@ -302,9 +296,7 @@ def update_service(service_id):
         abort(422)
      
     finally:
-        up_service.close()
         if request.path == '/api/services/' + str(service_id):
-
             return jsonify({
                 'success': True,
                 'services': service
@@ -333,9 +325,7 @@ def delete_service(service_id):
         abort(422)
      
     finally:
-        service_search.close()
         if request.path == '/api/services/' + str(service_id):
-
             return jsonify({
                 'success': True,
                 'services': service
@@ -358,7 +348,6 @@ def get_detail_person(person_id):
         abort(404)
 
     if request.path == '/api/people/' + str(person_id):
-
         return jsonify({
             'success': True,
             'person': person
@@ -373,28 +362,27 @@ def get_detail_person(person_id):
 
 @app.route('/people', methods=['GET'])
 @app.route('/api/people', methods=['GET'])
-def get_people():
- 
+def get_people(): 
     people_list = []
     try:
         selection = Person.query.all()
 
         if len(selection) == 0:
             flash('There are not people.')
-
+        
+        people_list = [person.format() for person in selection]
             
     except Exception as e:
         print(e)        
 
     finally:      
         if request.path == '/api/people':
-            people_list = [person.format() for person in selection]
             return jsonify({
                 'success': True,
                 'person': people_list
             }), 200
             
-        return render_template('pages/people.html', people=selection)
+    return render_template('pages/people.html', people=selection)
 
 #----------------------------------------------------
 # Handler GET form to create person
@@ -414,15 +402,17 @@ def add_new_person():
 @app.route('/api/people', methods=['POST'])
 def create_person():
     form = PersonForm(request.form)
+    people_list = []
     person={}
     name={}
     kind={}
     email={}
     ratew={}
     rateh={}
-
-    try:
-        if request.path == '/api/people/' + str(person_id):
+    print("Antes del try")
+    try:   
+        if request.path == '/api/people/':
+            print("Via api")
             body = request.get_json()
             name = body.get('name', None)
             kind = body.get('kind', None)
@@ -430,28 +420,40 @@ def create_person():
             ratew = body.get('ratew', None)
             rateh = body.get('rateh', None)
         else:
+            print("Via http")
             name = request.form.get('name')
             kind = request.form.get('kind')
             email = request.form.get('email')
             ratew = request.form.get('ratew')
             rateh = request.form.get('rateh')
-                   
-        new_person = Person(name=name, kind=kind, email=email, ratew=ratew, rateh=rateh)
-        new_person.insert()
-        person = Person.query.filter(Person.id == new_person.id).one_or_none()
-        flash("The new person was created successfully!")
-    except:
-        abort(422)
-     
-    finally:
-        if request.path == '/api/people':
+       
+        if form.validate_on_submit():
+            new_person = Person(name=name, kind=kind, email=email, ratew=ratew, rateh=rateh)
+            new_person.insert()
+            person = Person.query.filter(Person.id == new_person.id).one_or_none()
+            flash("The new person was created successfully!")
+        else:
+            flash("Something was wrong. Please try again.")
 
+        people = Person.query.all()
+
+        if len(people) == 0:
+            flash('There are not people.')
+
+        people_list = [person.format() for person in people]        
+
+    except Exception as e:
+        print(e) 
+     
+    finally:        
+        if request.path == '/api/people':
+            print(person.name)
             return jsonify({
                 'success': True,
                 'person': person.format()
             }), 200
 
-    return render_template('pages/people.html', people=person)
+    return render_template('pages/people.html', people=people_list)
 
 #----------------------------------------------------
 # Handler PATCH request person
@@ -493,7 +495,6 @@ def update_person(person_id):
         abort(422)
      
     finally:
-        up_person.close()
         if request.path == '/api/people/' + str(person_id):
 
             return jsonify({
@@ -520,7 +521,7 @@ def delete_person(person_id):
     try:
         person = person_search.format()
         person_search.delete()
-        
+
     except:
         abort(422) 
         
