@@ -372,8 +372,8 @@ def get_people():
         
         people_list = [person.format() for person in selection]
             
-    except Exception as e:
-        print(e)        
+    except:
+        abort(422)       
 
     finally:      
         if request.path == '/api/people':
@@ -409,10 +409,8 @@ def create_person():
     email={}
     ratew={}
     rateh={}
-    print("Antes del try")
     try:   
         if request.path == '/api/people/':
-            print("Via api")
             body = request.get_json()
             name = body.get('name', None)
             kind = body.get('kind', None)
@@ -420,7 +418,6 @@ def create_person():
             ratew = body.get('ratew', None)
             rateh = body.get('rateh', None)
         else:
-            print("Via http")
             name = request.form.get('name')
             kind = request.form.get('kind')
             email = request.form.get('email')
@@ -442,8 +439,8 @@ def create_person():
 
         people_list = [person.format() for person in people]        
 
-    except Exception as e:
-        print(e) 
+    except:
+        abort(422)
      
     finally:        
         if request.path == '/api/people':
@@ -464,14 +461,17 @@ def create_person():
 def update_person(person_id):
     form = PersonForm(request.form)   
     person = {}
+    name = {}
     ratew = {}
     rateh = {}
         
     if request.path == '/api/people/' + str(person_id):
-        body = request.get_json()
+        body = request.get_json()        
+        name = body.get('name')
         ratew = body.get('ratew')
         rateh = body.get('rateh')
     else:
+        name = request.form.get('name')
         ratew = request.form.get('ratew')
         rateh = request.form.get('rateh')
 
@@ -482,6 +482,7 @@ def update_person(person_id):
 
     try:
         if form.validate_on_submit(): 
+            up_person.name = name
             up_person.ratew = ratew
             up_person.rateh = rateh
             up_person.update()

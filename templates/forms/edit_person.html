@@ -8,6 +8,11 @@
     <form class="form" method="POST" action="/people/{{person.id}}">
       {{ form.hidden_tag() }}
       <h3 class="form-heading">Edit person <em>{{ person.name }}</em></h3>
+      
+      <div class="form-group">
+        <label for="name">Name</label>
+        {{ form.name(class_ = 'form-control', autofocus = true) }}
+      </div>
 
       <div class="form-group">
         <label for="ratew">Rate x word</label>

@@ -6,7 +6,7 @@ from wtforms.validators import InputRequired, NumberRange, DataRequired, AnyOf, 
 
 class PersonForm(FlaskForm):
     name = StringField(
-        'name'
+        'name', validators=[DataRequired()]
     )
     kind = StringField(
         'kind'
