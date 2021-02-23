@@ -56,7 +56,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def index():
-    gretting = "Hello Word"
+    gretting = "Wellcome to my APP"
     return render_template('pages/home.html', gretting=gretting)
 
 #----------------------------------------------------
