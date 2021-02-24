@@ -67,7 +67,6 @@ def index():
 @app.route('/projects', methods=['GET'])
 @app.route('/api/projects', methods=['GET'])
 def get_projects():
-
     project_list = []
     try:
         selection = Project.query.all()
@@ -90,6 +89,24 @@ def get_projects():
         return render_template('pages/projects.html', projects=selection)
 
 #----------------------------------------------------
+# Handler GET form to create projects
+#----------------------------------------------------
+
+@app.route('/projects/create', methods=['GET'])
+def add_new_project():
+    people = Person.query.all()
+    services = Service.query.all()
+    
+    person_list=[(person.id) for person in people]
+    service_list=[(service.id) for service in services]
+    
+    form = ProjectForm()
+    form.person_id.choices = person_list
+    form.service_id.choices = service_list
+    return render_template('forms/add_project.html', form=form)
+
+
+#----------------------------------------------------
 # Handler POST request project
 #----------------------------------------------------
 
@@ -97,26 +114,60 @@ def get_projects():
 @app.route('/projects', methods=['POST'])
 @app.route('/api/projects', methods=['POST'])
 def create_project():
-
+    form = ServiceForm(request.form)
+    project_list = []
     project = {}
+    name = {}
+    kind = {}
+    deadline = {}
+    word_count = {}
+    hour_count = {}
+    rate = {}
+    person_id = {}
+    service_id = {}
+    
     try:
-        body = request.get_json()
-        name = body.get('name', None)
-        kind = body.get('kind', None)
-        deadline = body.get('deadline', None)
-        word_count = body.get('word_count', None)
-        hour_count = body.get('hour_count', None)
-        rate = body.get('rate', None)
-        person_id = body.get('person_id', None)
-        service_id = body.get('service_id', None)        
+        if request.path == '/api/services':
+            print("Ingreso api")
+            body = request.get_json()
+            name = body.get('name', None)
+            kind = body.get('kind', None)
+            deadline = body.get('deadline', None)
+            word_count = body.get('word_count', None)
+            hour_count = body.get('hour_count', None)
+            rate = body.get('rate', None)
+            person_id = body.get('person_id', None)
+            service_id = body.get('service_id', None)
+        else:
+            print("Ingreso Web")
+            name = request.form.get('name')
+            kind = request.form.get('kind')
+            deadline = request.form.get('deadline')
+            word_count = request.form.get('word_count')
+            hour_count = request.form.get('hour_count')
+            rate = request.form.get('rate')
+            person_id = int(request.form.get('person_id'))
+            service_id = int(request.form.get('service_id'))
         
-        new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
+        if form.validate_on_submit():
+            print("Validado el formulario")
+            new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
+            new_project.insert()
+            project = Project.query.filter(Project.id == new_project.id).one_or_none()
+            flash("The new project was created successfully!")
+        else:
+            print("No validado el formulario")
+            flash("Something was wrong. Please try again.") 
+
+        projects = Project.query.all()
         
-        new_project.insert()
-        project = Project.query.filter(Project.id == new_project.id).one_or_none()
+        if len(projects) == 0:
+            flash("There are not projects.")
         
-    except:
-        abort(422)
+        project_list = [project.format() for project in projects]
+
+    except Exception as e:
+        print(e)
      
     finally:
         if request.path == '/api/projects':
@@ -125,7 +176,7 @@ def create_project():
                 'projects': project.format()
             }), 200
 
-    return render_template('pages/projects.html', projects=project)
+    return render_template('pages/projects.html', projects=project_list)
 
 #----------------------------------------------------
 # Handler PATCH request project
@@ -177,7 +228,6 @@ def update_project(project_id):
 @app.route('/api/projects/<int:project_id>', methods=['DELETE'])
 def delete_project(project_id):
     project= {}
-
     project_search = Project.query.filter(Project.id == project_id).one_or_none()
     
     if project_search is None:
@@ -231,7 +281,6 @@ def get_detail_service(service_id):
 @app.route('/services', methods=['GET'])
 @app.route('/api/services', methods=['GET'])
 def get_services():
-    error = False
     service_list = []
     try:
         selection = Service.query.all()
@@ -310,7 +359,7 @@ def create_service():
         if request.path == '/api/services':
             return jsonify({
                 'success': True,
-                'services': service.format()
+                'services': service_list
             }), 200
 
     return render_template('pages/services.html', services=service_list)
@@ -467,20 +516,20 @@ def add_new_person():
 def create_person():
     form = PersonForm(request.form)
     people_list = []
-    person={}
-    name={}
-    kind={}
-    email={}
-    ratew={}
-    rateh={}
+    person = {}
+
     try:   
-        if request.path == '/api/people/':
+        if request.path == '/api/people':           
             body = request.get_json()
             name = body.get('name', None)
             kind = body.get('kind', None)
             email = body.get('email', None)
             ratew = body.get('ratew', None)
             rateh = body.get('rateh', None)
+            new_person = Person(name=name, kind=kind, email=email, ratew=ratew, rateh=rateh)
+            new_person.insert()
+            person = new_person.format()
+            
         else:
             name = request.form.get('name')
             kind = request.form.get('kind')
@@ -488,32 +537,28 @@ def create_person():
             ratew = request.form.get('ratew')
             rateh = request.form.get('rateh')
        
-        if form.validate_on_submit():
-            new_person = Person(name=name, kind=kind, email=email, ratew=ratew, rateh=rateh)
-            new_person.insert()
-            person = Person.query.filter(Person.id == new_person.id).one_or_none()
-            flash("The new person was created successfully!")
-        else:
-            flash("Something was wrong. Please try again.")
-
-        people = Person.query.all()
-
-        if len(people) == 0:
-            flash('There are not people.')
-
-        people_list = [person.format() for person in people]        
-
-    except:
-        abort(422)
+            if form.validate_on_submit():
+                new_person = Person(name=name, kind=kind, email=email, ratew=ratew, rateh=rateh)
+                new_person.insert()
+                person = new_person.format()
+                flash("The new person was created successfully!")
+            else:                
+                flash("Something was wrong. Please try again.")
+    
+    except Exception as e:
+        print(e)
      
-    finally:        
+    finally:
+        people = Person.query.all()
+        people_list = [person.format() for person in people]
+        
         if request.path == '/api/people':
             return jsonify({
                 'success': True,
-                'person': person.format()
+                'people': people_list
             }), 200
 
-    return render_template('pages/people.html', people=people_list)
+    return render_template('pages/people.html', people=people)
 
 #----------------------------------------------------
 # Handler PATCH request person
@@ -524,37 +569,40 @@ def create_person():
 def update_person(person_id):
     form = PersonForm(request.form)   
     person = {}
-    name = {}
-    ratew = {}
-    rateh = {}
-        
-    if request.path == '/api/people/' + str(person_id):
-        body = request.get_json()        
-        name = body.get('name')
-        ratew = body.get('ratew')
-        rateh = body.get('rateh')
-    else:
-        
-        name = request.form.get('name')
-        ratew = request.form.get('ratew')
-        rateh = request.form.get('rateh')
-
+    
     up_person = Person.query.filter(Person.id == person_id).one_or_none()
     
     if up_person is None:
         abort(404)
 
     try:
-        if form.validate_on_submit(): 
+        if request.path == '/api/people/' + str(person_id):
+            body = request.get_json()        
+            name = body.get('name')
+            ratew = body.get('ratew')
+            rateh = body.get('rateh')
+            
             up_person.name = name
             up_person.ratew = ratew
             up_person.rateh = rateh
             up_person.update()
-            person = up_person.format()
-            flash("The data was updated successfully!")
-        else:
-            person = up_person.format()
-            flash("Fill with decimal numbers. Please, try again.")
+            person = up_person.format()            
+
+        else:            
+            name = request.form.get('name')
+            ratew = request.form.get('ratew')
+            rateh = request.form.get('rateh')
+
+            if form.validate_on_submit(): 
+                up_person.name = name
+                up_person.ratew = ratew
+                up_person.rateh = rateh
+                up_person.update()
+                person = up_person.format()
+                flash("The data was updated successfully!")
+            else:
+                person = up_person.format()
+                flash("Fill with decimal numbers. Please, try again.")
             
     except:
         abort(422)
