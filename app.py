@@ -200,6 +200,27 @@ def delete_project(project_id):
 
     return render_template('pages/projects.html', projects=project)    
 
+#----------------------------------------------------
+# Handler GET request detail service
+#----------------------------------------------------
+
+
+@app.route('/services/<int:service_id>', methods=['GET'])
+@app.route('/api/services/<int:service_id>', methods=['GET'])
+def get_detail_service(service_id):     
+    form = ServiceForm()
+    service = Service.query.filter(Service.id == service_id).one_or_none()
+    
+    if service is None:
+        abort(404)
+
+    if request.path == '/api/services/' + str(service_id):
+        return jsonify({
+            'success': True,
+            'person': service
+        }), 200
+
+    return render_template('forms/edit_service.html', service=service, form=form)
 
 
 #----------------------------------------------------
@@ -231,6 +252,15 @@ def get_services():
             }), 200
             
         return render_template('pages/services.html', services=selection)
+#----------------------------------------------------
+# Handler GET form to create service
+#----------------------------------------------------
+
+@app.route('/services/create', methods=['GET'])
+def add_new_service():     
+    form = ServiceForm()
+    return render_template('forms/add_service.html', form=form)
+
 
 #----------------------------------------------------
 # Handler POST request service
@@ -240,45 +270,74 @@ def get_services():
 @app.route('/services', methods=['POST'])
 @app.route('/api/services', methods=['POST'])
 def create_service():
-
+    form = ServiceForm(request.form)
+    service_list = []
     service = {}
+    name = {}
+    source = {}
+    destiny = {}
+    
     try:
-        body = request.get_json()
-        name = body.get('name', None)
-        source = body.get('source', None)
-        destiny = body.get('destiny', None)
+        if request.path == '/api/services':
+            body = request.get_json()
+            name = body.get('name', None)
+            source = body.get('source', None)
+            destiny = body.get('destiny', None)
+        else:
+            name = request.form.get('name')
+            source = request.form.get('source')
+            destiny = request.form.get('destiny')            
+
+        if form.validate_on_submit():
+            new_service = Service(name=name, source=source, destiny=destiny)
+            new_service.insert()
+            service = Service.query.filter(Service.id == new_service.id).one_or_none()
+            flash("The new service was created successfully!")
+        else:
+            flash("Something was wrong. Please try again.")       
+
+        services = Service.query.all()
         
-        new_service = Service(name=name, source=source, destiny=destiny)
-        new_service.insert()
-        service = Service.query.filter(Service.id == new_service.id).one_or_none()
+        if len(services) == 0:
+            flash("There are not services.")
         
+        service_list = [service.format() for service in services]
+
     except:
         abort(422)
      
     finally:
         if request.path == '/api/services':
-
             return jsonify({
                 'success': True,
                 'services': service.format()
             }), 200
 
-    return render_template('pages/services.html', services=service)
+    return render_template('pages/services.html', services=service_list)
 
 #----------------------------------------------------
 # Handler PATCH request service
 #----------------------------------------------------
 
-@app.route('/services/<int:service_id>', methods=['PATCH', 'GET'])
+@app.route('/services/<int:service_id>', methods=['POST', 'PATCH'])
 @app.route('/api/services/<int:service_id>', methods=['PATCH'])
 def update_service(service_id):
-
+    form = ServiceForm(request.form)
     service = {}
-
-    body = request.get_json()
-    name = body.get('name', None)
-    source = body.get('source', None)
-    destiny = body.get('destiny', None)
+    name = {}
+    source = {}
+    destiny = {}
+    
+    
+    if request.path == '/api/services/' + str(service_id):
+        body = request.get_json()
+        name = body.get('name', None)
+        source = body.get('source', None)
+        destiny = body.get('destiny', None)
+    else:
+        name = request.form.get('name')
+        source = request.form.get('source')
+        destiny = request.form.get('destiny')
 
     up_service = Service.query.filter(Service.id == service_id).one_or_none()
     
@@ -286,12 +345,17 @@ def update_service(service_id):
         abort(404)
         
     try:
-        up_service.name = name
-        up_service.source = source
-        up_service.destiny = destiny
-        up_service.update()
-        service = up_service.format()
-
+        if form.validate_on_submit(): 
+            up_service.name = name
+            up_service.source = source
+            up_service.destiny = destiny
+            up_service.update()
+            service = up_service.format()
+            flash("The data was updated successfully!")
+        else:
+            service = up_service.format()
+            flash("Please, try again.")          
+            
     except:
         abort(422)
      
@@ -302,7 +366,7 @@ def update_service(service_id):
                 'services': service
             }), 200
 
-    return render_template('pages/services.html', services=service)
+    return render_template('forms/edit_service.html', service=service, form=form)
 
 #----------------------------------------------------
 # Handler DELETE request service
@@ -331,7 +395,7 @@ def delete_service(service_id):
                 'services': service
             }), 200
 
-    return render_template('pages/services.html', services=service)    
+    return render_template('pages/services.html', service=service)    
 
 #----------------------------------------------------
 # Handler GET request detail person
@@ -444,7 +508,6 @@ def create_person():
      
     finally:        
         if request.path == '/api/people':
-            print(person.name)
             return jsonify({
                 'success': True,
                 'person': person.format()
@@ -471,6 +534,7 @@ def update_person(person_id):
         ratew = body.get('ratew')
         rateh = body.get('rateh')
     else:
+        
         name = request.form.get('name')
         ratew = request.form.get('ratew')
         rateh = request.form.get('rateh')
@@ -513,7 +577,6 @@ def update_person(person_id):
 @app.route('/api/people/<int:person_id>', methods=['DELETE'])
 def delete_person(person_id):
     person = {}
-
     person_search = Person.query.filter(Person.id == person_id).one_or_none()
     
     if person_search is None:
@@ -527,9 +590,7 @@ def delete_person(person_id):
         abort(422) 
         
     finally:
-        person_search.close()
         if request.path == '/api/people/' + str(person_id):
-
             return jsonify({
                 'success': True,
                 'person': person

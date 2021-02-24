@@ -21,4 +21,16 @@ class PersonForm(FlaskForm):
         'rateh', validators=[InputRequired()]
     )
     
+
+class ServiceForm(FlaskForm):
+    name = StringField(
+        'name', validators=[DataRequired()]
+    )
+    source = StringField(
+        'source', validators=[DataRequired()]
+    )
+    destiny = StringField(
+        'destiny', validators=[DataRequired()]
+    )
+    
    

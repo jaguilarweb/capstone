@@ -1,0 +1,30 @@
+{% extends 'layouts/main.html' %}
+{% block title %}
+	{{ super() }}
+	Services
+{% endblock %}
+{% block content %}
+  <div class="form-wrapper">
+    <form class="form" method="POST" action="/services/{{service.id}}">
+      {{ form.hidden_tag() }}
+      <h3 class="form-heading">Edit Service <em>{{ service.name }}</em> </h3>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        {{ form.name(class_ = 'form-control', value=service.name,  autofocus = true) }}
+      </div>
+
+      <div class="form-group">
+        <label for="source">Source</label>
+        {{ form.source(class_ = 'form-control', value=service.source, autofocus = true) }}
+      </div>
+
+      <div class="form-group">
+        <label for="destiny">Destiny</label>
+        {{ form.destiny(class_ = 'form-control', value=service.destiny, autofocus = true) }}
+      </div>
+
+      <input type="submit" value="Edit Service" class="btn btn-primary btn-lg btn-block">
+    </form>
+  </div>
+{% endblock %}

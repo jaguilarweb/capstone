@@ -1,11 +1,49 @@
 {% extends 'layouts/main.html' %}
+{% block title %}
+	{{ super() }}
+	Services
+{% endblock %}
 
-{% block title %}Services{% endblock %}
 
 {% block content %}
-<h1>Services</h1>
+
+<ul class="items">
+    <h1>Services</h1> 		
+	<a href="services/create" class="btn btn-primary" role="button">New Service</a>
+	<hr/>
     {% for service in services %}
-        <h2>{{ service.name }}</h2>
+	<li>
+		<a href="/services/{{ service.id }}">
+			<i class="fas fa-clipboard-check"></i>
+			<div class="item">
+				<h5><em>{{service.name }}</em> | Source : {{ service.source }} | Destiny : {{ service.destiny }}</h5>
+			</div>
+		</a>			
+	</li>
+	<li>
+		<button class="btn btn-primary delete-button" data-id="{{service.id}}">Delete</button>				
+	</li> 
     {% endfor %}
+</ul>
+{% endblock %}
+
+
+{% block scripts %}
+	{{ super() }}
+
+<script>
+	const deleteBtns = document.querySelectorAll('.delete-button');
+	for (let i = 0; i < deleteBtns.length; i++) {
+		const btn = deleteBtns[i];
+		btn.onclick = function(e) {
+		const serviceId = e.target.dataset['id'];
+		fetch('/services/' + serviceId, {
+			method: 'DELETE'
+		}).then(() => {
+			window.location.href = "/services";
+		});
+	}
+}
+</script>
 
 {% endblock %}
