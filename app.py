@@ -73,14 +73,14 @@ def get_projects():
 
         if len(selection) == 0:
             flash('There are not projects.')
-
             
+        project_list = [project.format() for project in selection]
+
     except Exception as e:
         print(e)        
 
     finally:
         if request.path == '/api/projects':
-            project_list = [project.format() for project in selection]
             return jsonify({
                 'success': True,
                 'projects': project_list
@@ -128,7 +128,6 @@ def create_project():
     
     try:
         if request.path == '/api/services':
-            print("Ingreso api")
             body = request.get_json()
             name = body.get('name', None)
             kind = body.get('kind', None)
@@ -139,7 +138,6 @@ def create_project():
             person_id = body.get('person_id', None)
             service_id = body.get('service_id', None)
         else:
-            print("Ingreso Web")
             name = request.form.get('name')
             kind = request.form.get('kind')
             deadline = request.form.get('deadline')
@@ -150,7 +148,6 @@ def create_project():
             service_id = int(request.form.get('service_id'))
         
         if form.validate_on_submit():
-            print("Validado el formulario")
             new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
             new_project.insert()
             project = Project.query.filter(Project.id == new_project.id).one_or_none()
@@ -267,7 +264,7 @@ def get_detail_service(service_id):
     if request.path == '/api/services/' + str(service_id):
         return jsonify({
             'success': True,
-            'person': service
+            'person': service.format()
         }), 200
 
     return render_template('forms/edit_service.html', service=service, form=form)
@@ -288,13 +285,13 @@ def get_services():
         if len(selection) == 0:
             flash('There are not services.')
 
-            
+        service_list = [service.format() for service in selection]
+   
     except Exception as e:
         print(e)        
 
     finally:      
-        if request.path == '/api/services':
-            service_list = [service.format() for service in selection]
+        if request.path == '/api/services':            
             return jsonify({
                 'success': True,
                 'services': service_list
@@ -322,40 +319,37 @@ def create_service():
     form = ServiceForm(request.form)
     service_list = []
     service = {}
-    name = {}
-    source = {}
-    destiny = {}
     
     try:
         if request.path == '/api/services':
             body = request.get_json()
             name = body.get('name', None)
             source = body.get('source', None)
-            destiny = body.get('destiny', None)
+            destiny = body.get('destiny', None)            
+            new_service = Service(name=name, source=source, destiny=destiny)
+            new_service.insert()
+            service = new_service.format()
+
         else:
             name = request.form.get('name')
             source = request.form.get('source')
             destiny = request.form.get('destiny')            
 
-        if form.validate_on_submit():
-            new_service = Service(name=name, source=source, destiny=destiny)
-            new_service.insert()
-            service = Service.query.filter(Service.id == new_service.id).one_or_none()
-            flash("The new service was created successfully!")
-        else:
-            flash("Something was wrong. Please try again.")       
-
-        services = Service.query.all()
-        
-        if len(services) == 0:
-            flash("There are not services.")
-        
-        service_list = [service.format() for service in services]
-
-    except:
-        abort(422)
+            if form.validate_on_submit():
+                new_service = Service(name=name, source=source, destiny=destiny)
+                new_service.insert()
+                service = Service.query.filter(Service.id == new_service.id).one_or_none()
+                flash("The new service was created successfully!")
+            else:
+                flash("Something was wrong. Please try again.")
+                       
+    except Exception as e:
+        print(e)
      
     finally:
+        services = Service.query.all()   
+        service_list = [service.format() for service in services]
+        
         if request.path == '/api/services':
             return jsonify({
                 'success': True,
@@ -373,41 +367,43 @@ def create_service():
 def update_service(service_id):
     form = ServiceForm(request.form)
     service = {}
-    name = {}
-    source = {}
-    destiny = {}
     
-    
-    if request.path == '/api/services/' + str(service_id):
-        body = request.get_json()
-        name = body.get('name', None)
-        source = body.get('source', None)
-        destiny = body.get('destiny', None)
-    else:
-        name = request.form.get('name')
-        source = request.form.get('source')
-        destiny = request.form.get('destiny')
-
     up_service = Service.query.filter(Service.id == service_id).one_or_none()
-    
+        
     if up_service is None:
         abort(404)
         
     try:
-        if form.validate_on_submit(): 
+        if request.path == '/api/services/' + str(service_id):
+            body = request.get_json()
+            name = body.get('name', None)
+            source = body.get('source', None)
+            destiny = body.get('destiny', None)
             up_service.name = name
             up_service.source = source
             up_service.destiny = destiny
             up_service.update()
             service = up_service.format()
-            flash("The data was updated successfully!")
+
         else:
-            service = up_service.format()
-            flash("Please, try again.")          
-            
+            name = request.form.get('name')
+            source = request.form.get('source')
+            destiny = request.form.get('destiny')
+
+            if form.validate_on_submit(): 
+                up_service.name = name
+                up_service.source = source
+                up_service.destiny = destiny
+                up_service.update()
+                service = up_service.format()
+                flash("The data was updated successfully!")
+            else:
+                service = up_service.format()
+                flash("Please, try again.")          
+
     except:
         abort(422)
-     
+
     finally:
         if request.path == '/api/services/' + str(service_id):
             return jsonify({
@@ -463,7 +459,7 @@ def get_detail_person(person_id):
     if request.path == '/api/people/' + str(person_id):
         return jsonify({
             'success': True,
-            'person': person
+            'person': person.format()
         }), 200
 
     return render_template('forms/edit_person.html', person=person, form=form)
@@ -492,7 +488,7 @@ def get_people():
         if request.path == '/api/people':
             return jsonify({
                 'success': True,
-                'person': people_list
+                'people': people_list
             }), 200
             
     return render_template('pages/people.html', people=selection)
@@ -602,7 +598,7 @@ def update_person(person_id):
                 flash("The data was updated successfully!")
             else:
                 person = up_person.format()
-                flash("Fill with decimal numbers. Please, try again.")
+                flash("Please, try again.")
             
     except:
         abort(422)
