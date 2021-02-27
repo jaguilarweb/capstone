@@ -67,17 +67,11 @@ def index():
 @app.route('/projects/<int:project_id>', methods=['GET'])
 @app.route('/api/projects/<int:project_id>', methods=['GET'])
 def get_detail_project(project_id): 
-    people = Person.query.all()
-    services = Service.query.all()
-    
-    person_list=[(person.id) for person in people]
-    service_list=[(service.id) for service in services]
-
-    form = ProjectForm()
-    form.person_id.choices = person_list
-    form.service_id.choices = service_list
-    
+    form = ProjectEditForm()
+   
     project = Project.query.filter(Project.id == project_id).one_or_none()
+    person = Person.query.filter(Person.id == project.person_id).one_or_none()
+    service = Service.query.filter(Service.id == project.service_id).one_or_none()
     
     if project is None:
         abort(404)
@@ -88,7 +82,7 @@ def get_detail_project(project_id):
             'project': project.format()
         }), 200
 
-    return render_template('forms/edit_project.html', project=project, form=form)
+    return render_template('forms/edit_project.html', project=project, person=person, service=service, form=form)
 
 
 #----------------------------------------------------
@@ -136,9 +130,6 @@ def add_new_project():
     form.person_id.choices = person_list
     form.service_id.choices = service_list
     
-    for person in person_list:
-        print(person)
-    
     return render_template('forms/add_project.html', form=form)
 
 
@@ -160,12 +151,9 @@ def create_project():
             name = body.get('name', None)
             kind = body.get('kind', None)
             deadline = body.get('deadline', None)
-            word_count = body.get('word_count', None)
-            hour_count = body.get('hour_count', None)
-            rate = body.get('rate', None)
             person_id = body.get('person_id', None)
             service_id = body.get('service_id', None)
-            new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
+            new_project = Project(name=name, kind=kind, deadline=deadline, person_id=person_id, service_id=service_id)
             new_project.insert()
             project = new_project.format()
 
@@ -175,13 +163,8 @@ def create_project():
             deadline = request.form.get('deadline')
             person_id = request.form.get('person_id')
             service_id = request.form.get('service_id')
-            print(type(person_id))
-            print(person_id)
-            print(type(service_id))
-            print(service_id)
             
             if form.validate_on_submit():
-                print("Ingresé")
                 new_project = Project(name= name, kind=kind, deadline=deadline, person_id=person_id, service_id=service_id)
                 new_project.insert()
                 project = Project.query.filter(Project.id == new_project.id).one_or_none()
@@ -211,20 +194,27 @@ def create_project():
 @app.route('/projects/<int:project_id>', methods=['PATCH', 'POST'])
 @app.route('/api/projects/<int:project_id>', methods=['PATCH'])
 def update_project(project_id):
-
+    form = ProjectEditForm(request.form)
     project = {}
-
-    body = request.get_json()
-    deadline = body.get('deadline', None)
-    word_count = body.get('word_count', None)
-    hour_count = body.get('hour_count', None)
-    rate = body.get('rate', None)
-    
     up_project = Project.query.filter(Project.id == project_id).one_or_none()
-
+    person = Person.query.filter(Person.id == up_project.person_id).one_or_none()
+    service = Service.query.filter(Service.id == up_project.service_id).one_or_none()
+    
     if up_project is None:
         abort(404)
-
+   
+    if request.path == '/api/projects/' + str(project_id):
+        body = request.get_json()
+        deadline = body.get('deadline', None)
+        word_count = body.get('word_count', None)
+        hour_count = body.get('hour_count', None)
+        rate = body.get('rate', None)
+    else:
+        deadline = request.form.get('deadline')
+        word_count = request.form.get('word_count')
+        hour_count = request.form.get('hour_count')
+        rate = request.form.get('rate')
+    
     try:
         up_project.deadline = deadline
         up_project.word_count = word_count
@@ -232,19 +222,19 @@ def update_project(project_id):
         up_project.rate = rate
         up_project.update()
         project = up_project.format()
+        flash("The data was updated successfully!")
 
     except:
         abort(422)
      
     finally:
         if request.path == '/api/projects/' + str(project_id):
-
             return jsonify({
                 'success': True,
                 'project': project
             }), 200
 
-    return render_template('pages/projects.html', projects=project)
+    return render_template('forms/edit_project.html', project=project, person=person, service=service, form=form)
 
 #----------------------------------------------------
 # Handler DELETE request project

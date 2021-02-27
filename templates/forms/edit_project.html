@@ -1,0 +1,145 @@
+{% extends 'layouts/main.html' %}
+{% block title %}
+	{{ super() }}
+	Projects
+{% endblock %}
+{% block content %}
+  <div class="form-wrapper">
+    <form class="form" method="POST" action="/projects/{{project.id}}">
+      {{ form.hidden_tag() }}
+      <div class="panel panel-warning">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Edit Project <em>{{ project.name }}</em></div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label for="kind">Kind : </label>
+            <label for="kind">{{project.kind}}</label>
+          </div>
+          <div class="form-group">
+            <label for="deadline">Deadline</label>
+            {{ form.deadline(class_ = 'form-control',  value=project.deadline, autofocus = true) }}
+          </div>
+
+          <div class="form-group">
+            <label for="person_id">Person : </label> 
+            <label for="person_id">{{ person.name }}</label> 
+          </div>
+          <div class="form-group">
+            <label for="service_id">Service : {{ service.name }} </label> 
+          </div>
+          <div class="form-group">
+                <label for="ratew"> Rate for word {{ person.ratew}} USD</label>
+          </div>
+          <div class="form-group">
+                <label for="rateh"> Rate for hour {{ person.rateh}} USD</label>
+          </div>
+          
+          <div class="form-group">
+            <label for="word_count">word_count</label>
+            {{ form.word_count(class_ = 'form-control',  value=project.word_count, autofocus = true) }}
+          </div>
+          <div class="form-group">
+            <label for="hour_count">hour_count</label>
+            {{ form.hour_count(class_ = 'form-control',  value=project.hour_count, autofocus = true) }}
+          </div>
+          <div class="form-group">
+            <label for="rate">rate</label>
+            {{ form.rate(class_ = 'form-control',  value=project.rate, autofocus = true) }}
+          </div>
+
+        </div>
+        <input type="submit" value="Edit Project" class="btn btn-primary btn-lg btn-block">
+      </div>
+    </form>
+
+<!-- Initial panel contents -->
+    <div class="panel panel-warning">
+      <!-- Default panel contents -->
+      <div class="panel-heading">Calculate</div>
+      <div class="panel-body">
+        <label for="wc"> Word Count </label> 
+        <label for="hc"> Hour Count </label> 
+        <label for="total"> Total </label> 
+        <!-- Table -->
+        <table class="table">
+          <tr>
+            <td>Type</td>
+            <td>WC</td>
+            <td></td>
+            <td>Percentage</td>
+            <td></td>
+            <td>WC Ponderate</td>
+          </tr>
+          <tr>
+            <td>XTranslated</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+          <tr>
+            <td>Repetition</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+          <tr>
+            <td>100%</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+          <tr>
+            <td>95%-99%</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+          <tr>
+            <td>55%-94%</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+          <tr>
+            <td>75%-99%</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+          <tr>
+            <td>50%-74%</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+          <tr>
+            <td>NoMatch</td>
+            <td><input size="5px"></div></td>
+            <td>*</td>
+            <td><input size="5px"></div></td>
+            <td>%</td>
+            <td> = <label for="subTotal">1000,3</label></td>
+          </tr>
+
+        </table>
+        <p>Horas</p>
+        <button class="btn btn-primary btn-lg btn-block" > Calculate </button>
+      </div>
+    </div>
+    <!-- End panel contents -->
+  </div>
+{% endblock %}

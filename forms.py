@@ -22,6 +22,21 @@ class ProjectForm(FlaskForm):
         'service_id', choices=[], coerce=int, validate_choice=False, validators=[InputRequired()]
     )
 
+class ProjectEditForm(FlaskForm):
+    deadline = DateTimeField(
+        'deadline',
+        validators=[DataRequired()]
+    )
+    word_count = IntegerField(
+        'word_count'
+    )
+    hour_count = DecimalField(
+        'hour_count'
+    )
+    rate = DecimalField(
+        'rate'
+    )
+
 
 
 class PersonForm(FlaskForm):

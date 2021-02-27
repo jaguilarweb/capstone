@@ -45,6 +45,16 @@ button {
   background-color: orange;
   color:white;
 }
+
+table {
+  font-size: 12px;
+}
+
+td {
+  padding: 4px;
+}
+
+
 /* Main elements end */
 
 
