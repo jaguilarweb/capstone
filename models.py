@@ -33,16 +33,6 @@ class Project(db.Model):
     person_child = db.relationship("Person", back_populates='services')
     service_child = db.relationship("Service", back_populates='people')
 
-    def __init__(self, name, kind, deadline, word_count, hour_count, rate, person_id, service_id):
-        self.name = name
-        self.kind = kind
-        self.deadline = deadline
-        self.word_count = word_count
-        self.hour_count = hour_count
-        self.rate = rate
-        self.person_id = person_id
-        self.service_id = service_id
-
     def insert(self):
         try:
             db.session.add(self)
@@ -91,13 +81,6 @@ class Person(db.Model):
     rateh = Column(Float, nullable=True)
     services = db.relationship("Project", back_populates="person_child")
 
-    def __init__(self, name, kind, email, ratew, rateh):
-        self.name = name
-        self.kind = kind
-        self.email = email
-        self.ratew = ratew
-        self.rateh = rateh
-
     def insert(self):
         try:
             db.session.add(self)
@@ -140,11 +123,6 @@ class Service(db.Model):
     source = Column(String, nullable=True)
     destiny = Column(String, nullable=True)
     people = db.relationship("Project", back_populates="service_child")
-
-    def __init__(self, name, source, destiny):
-        self.name = name
-        self.source = source
-        self.destiny = destiny
 
     def insert(self):
         try:

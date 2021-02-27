@@ -1,7 +1,27 @@
 from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, DecimalField, SelectField, SelectMultipleField, DateTimeField
+from wtforms import StringField, IntegerField, DecimalField, SelectField, SelectMultipleField, DateTimeField
 from wtforms.validators import InputRequired, NumberRange, DataRequired, AnyOf, URL
+
+
+class ProjectForm(FlaskForm):
+    name = StringField(
+        'name', validators=[DataRequired()]
+    )
+    kind = StringField(
+        'kind', validators=[DataRequired()]
+    )
+    deadline = DateTimeField(
+        'deadline',
+        validators=[DataRequired()]
+    )    
+    person_id = SelectField(
+        'person_id', choices=[], coerce=int, validate_choice=False, validators=[InputRequired()]
+    )
+    service_id = SelectField(
+        'service_id', choices=[], coerce=int, validate_choice=False, validators=[InputRequired()]
+    )
+
 
 
 class PersonForm(FlaskForm):

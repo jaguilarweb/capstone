@@ -60,6 +60,38 @@ def index():
     return render_template('pages/home.html', gretting=gretting)
 
 #----------------------------------------------------
+# Handler GET request detail service
+#----------------------------------------------------
+
+
+@app.route('/projects/<int:project_id>', methods=['GET'])
+@app.route('/api/projects/<int:project_id>', methods=['GET'])
+def get_detail_project(project_id): 
+    people = Person.query.all()
+    services = Service.query.all()
+    
+    person_list=[(person.id) for person in people]
+    service_list=[(service.id) for service in services]
+
+    form = ProjectForm()
+    form.person_id.choices = person_list
+    form.service_id.choices = service_list
+    
+    project = Project.query.filter(Project.id == project_id).one_or_none()
+    
+    if project is None:
+        abort(404)
+
+    if request.path == '/api/projects/' + str(project_id):
+        return jsonify({
+            'success': True,
+            'project': project.format()
+        }), 200
+
+    return render_template('forms/edit_project.html', project=project, form=form)
+
+
+#----------------------------------------------------
 # Handler GET request projects
 #----------------------------------------------------
 
@@ -97,12 +129,16 @@ def add_new_project():
     people = Person.query.all()
     services = Service.query.all()
     
-    person_list=[(person.id) for person in people]
-    service_list=[(service.id) for service in services]
+    person_list= [(person.id, person.name) for person in people]
+    service_list= [(service.id, service.name) for service in services]
     
     form = ProjectForm()
     form.person_id.choices = person_list
     form.service_id.choices = service_list
+    
+    for person in person_list:
+        print(person)
+    
     return render_template('forms/add_project.html', form=form)
 
 
@@ -114,20 +150,12 @@ def add_new_project():
 @app.route('/projects', methods=['POST'])
 @app.route('/api/projects', methods=['POST'])
 def create_project():
-    form = ServiceForm(request.form)
+    form = ProjectForm(request.form)
     project_list = []
     project = {}
-    name = {}
-    kind = {}
-    deadline = {}
-    word_count = {}
-    hour_count = {}
-    rate = {}
-    person_id = {}
-    service_id = {}
     
     try:
-        if request.path == '/api/services':
+        if request.path == '/api/projects':
             body = request.get_json()
             name = body.get('name', None)
             kind = body.get('kind', None)
@@ -137,40 +165,41 @@ def create_project():
             rate = body.get('rate', None)
             person_id = body.get('person_id', None)
             service_id = body.get('service_id', None)
+            new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
+            new_project.insert()
+            project = new_project.format()
+
         else:
             name = request.form.get('name')
             kind = request.form.get('kind')
             deadline = request.form.get('deadline')
-            word_count = request.form.get('word_count')
-            hour_count = request.form.get('hour_count')
-            rate = request.form.get('rate')
-            person_id = int(request.form.get('person_id'))
-            service_id = int(request.form.get('service_id'))
-        
-        if form.validate_on_submit():
-            new_project = Project(name=name, kind=kind, deadline=deadline, word_count=word_count, hour_count=hour_count, rate=rate, person_id=person_id, service_id=service_id)
-            new_project.insert()
-            project = Project.query.filter(Project.id == new_project.id).one_or_none()
-            flash("The new project was created successfully!")
-        else:
-            print("No validado el formulario")
-            flash("Something was wrong. Please try again.") 
-
-        projects = Project.query.all()
-        
-        if len(projects) == 0:
-            flash("There are not projects.")
-        
-        project_list = [project.format() for project in projects]
+            person_id = request.form.get('person_id')
+            service_id = request.form.get('service_id')
+            print(type(person_id))
+            print(person_id)
+            print(type(service_id))
+            print(service_id)
+            
+            if form.validate_on_submit():
+                print("Ingresé")
+                new_project = Project(name= name, kind=kind, deadline=deadline, person_id=person_id, service_id=service_id)
+                new_project.insert()
+                project = Project.query.filter(Project.id == new_project.id).one_or_none()
+                flash("The new project was created successfully!")
+            else:
+                flash("Something was wrong. Please try again.") 
 
     except Exception as e:
         print(e)
      
     finally:
+        projects = Project.query.all()
+        project_list = [project.format() for project in projects]
+        
         if request.path == '/api/projects':
             return jsonify({
                 'success': True,
-                'projects': project.format()
+                'projects': project_list
             }), 200
 
     return render_template('pages/projects.html', projects=project_list)
