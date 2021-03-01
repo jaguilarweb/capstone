@@ -28,10 +28,10 @@
             <label for="service_id">Service : {{ service.name }} </label> 
           </div>
           <div class="form-group">
-                <label for="ratew"> Rate for word {{ person.ratew}} USD</label>
+            Rate for word <label id="ratew" for="ratew" value="" >{{person.ratew}}</label> USD
           </div>
           <div class="form-group">
-                <label for="rateh"> Rate for hour {{ person.rateh}} USD</label>
+            Rate for hour <label id="rateh" for="rateh" value="">{{person.rateh}}</label>  USD
           </div>
           
           <div class="form-group">
@@ -57,9 +57,9 @@
       <!-- Default panel contents -->
       <div class="panel-heading">Calculate</div>
       <div class="panel-body">
-        <label for="wc"> Word Count </label> 
-        <label for="hc"> Hour Count </label> 
-        <label for="total"> Total </label> 
+        <label> Word Count: </label> <label id="result-wc"> </label> </br>
+        <label> Hour Count: </label> <label id="result-hc"> </label> </br>
+        <label> Total USD: </label> <label id="result-rate"> </label>
         <!-- Table -->
         <table class="table">
           <tr>
@@ -70,76 +70,150 @@
             <td></td>
             <td>WC Ponderate</td>
           </tr>
-          <tr>
-            <td>XTranslated</td>
-            <td><input size="5px"></div></td>
+          <tr>   
+            <td>Perfect Match</td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
-          <tr>
+          <tr>   
             <td>Repetition</td>
-            <td><input size="5px"></div></td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
+          </tr>
+          <tr>   
+            <td>Context Match</td>
+            <td><input class="wc" size="3px"></div></td>
+            <td>*</td>
+            <td><input class="percentaje" size="3px"></div></td>
+            <td>%</td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
           <tr>
             <td>100%</td>
-            <td><input size="5px"></div></td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
           <tr>
             <td>95%-99%</td>
-            <td><input size="5px"></div></td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
           <tr>
-            <td>55%-94%</td>
-            <td><input size="5px"></div></td>
+            <td>85%-94%</td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
           <tr>
-            <td>75%-99%</td>
-            <td><input size="5px"></div></td>
+            <td>75%-84%</td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
           <tr>
             <td>50%-74%</td>
-            <td><input size="5px"></div></td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
           <tr>
-            <td>NoMatch</td>
-            <td><input size="5px"></div></td>
+            <td>No Match</td>
+            <td><input class="wc" size="3px"></div></td>
             <td>*</td>
-            <td><input size="5px"></div></td>
+            <td><input class="percentaje" size="3px"></div></td>
             <td>%</td>
-            <td> = <label for="subTotal">1000,3</label></td>
+            <td> = <label class="label-subtotal" value=""></label></td>
           </tr>
-
         </table>
-        <p>Horas</p>
-        <button class="btn btn-primary btn-lg btn-block" > Calculate </button>
+        <p>Horas: <input id="hours" size="3px"></div></p>
+        <button id="calculate" class="btn btn-primary btn-lg btn-block" > Calculate </button>
       </div>
     </div>
     <!-- End panel contents -->
   </div>
+{% endblock %}
+
+{%block body%}
+
+{{ super() }}
+<body onload="init();">
+
+  
+  {% block scripts %}
+  {{ super() }}
+  
+  <script>
+
+function init(){
+  var listaOperadores1 = document.querySelectorAll('.wc');
+  var listaOperadores2 = document.querySelectorAll('.percentaje');
+  var resultado = document.querySelectorAll('.label-subtotal');
+  var wordCount = document.getElementById("result-wc");
+  var hourCount = document.getElementById("result-hc");
+  var rate = document.getElementById("result-rate");
+  var wordRate = document.getElementById("ratew").innerHTML;
+  var hourRate = document.getElementById("rateh").innerHTML;
+  var hours = document.getElementById("hours");
+
+  calculate.onclick = function(e){
+    var wc=0;
+    var hc=0;
+    var total=0;
+
+    for (let i = 0; i < listaOperadores1.length; i++){
+      var res = parseFloat(listaOperadores1[i].value) * parseFloat(listaOperadores2[i].value);
+      wc = parseInt(wc + res);
+      resultado[i].textContent = res.toFixed(2);
+    }
+
+    hc = parseFloat(hours.value);
+    wordCount.textContent = wc;
+    hourCount.textContent = hc.toFixed(2);
+
+    total = (wc * parseFloat(wordRate)) + (parseFloat(hourRate) * hc);
+ 
+    rate.textContent = total.toFixed(2);
+
+  }
+
+}
+
+
+    
+    // function init(){
+    //   var operador1 = document.getElementById("wc");
+    //   var operador2 = document.getElementById("percentaje");
+    //   var resultado = document.getElementById("label-subtotal");
+    
+    //   calculate.onclick = function(e){
+    //     res = parseFloat(operador1.value)* parseFloat(operador2.value);
+    //     resultado.textContent = res;
+        
+    //   }
+      
+    // }
+    
+    
+  </script>
+
+{% endblock %}
+</body>
 {% endblock %}
