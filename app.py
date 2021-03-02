@@ -714,6 +714,13 @@ def not_found(error):
         return render_template('errors/500.html'), 500
 
 
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
+
+
 # Default port:
 if __name__ == '__main__':
     app.run()
