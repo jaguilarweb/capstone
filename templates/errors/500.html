@@ -1,11 +1,12 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'layouts/main.html' %}
 
-{% block head %}
-    {{ super() }}
-    {% block title %}Calculate{% endblock %}
+{% block title %} 
+{{ super() }}
+Error 500
 {% endblock %}
-{% block body %}
+
+{% block content %}
         <h1>Oops...</h1>
-        <p>Something ent wrong.</p>
+        <p>Something went wrong.</p>
 
 {% endblock %}
