@@ -1,10 +1,12 @@
 import os
+import json
 from flask import Flask, flash, request, abort, render_template, jsonify, url_for, redirect
 from models import *
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from forms import *
 from flask_cors import CORS
+from auth import AuthError, requires_auth
 
 
 #---------------------------------------------------
@@ -18,7 +20,7 @@ def create_app(test_config=None):
     bootstrap = Bootstrap(app)
     setup_db(app)
     CORS(app)
- 
+    
     #Temporaly to obtain flash message. Change and delete.
     app.secret_key = 'many random bytes'
     
@@ -66,7 +68,8 @@ def index():
 
 @app.route('/projects/<int:project_id>', methods=['GET'])
 @app.route('/api/projects/<int:project_id>', methods=['GET'])
-def get_detail_project(project_id): 
+@requires_auth('get:project-detail')
+def get_detail_project(payload, project_id): 
     form = ProjectEditForm()
    
     project = Project.query.filter(Project.id == project_id).one_or_none()
@@ -92,7 +95,8 @@ def get_detail_project(project_id):
 
 @app.route('/projects', methods=['GET'])
 @app.route('/api/projects', methods=['GET'])
-def get_projects():
+@requires_auth('get:project')
+def get_projects(payload):
     project_list = []
     try:
         selection = Project.query.all()
@@ -140,7 +144,8 @@ def add_new_project():
 
 @app.route('/projects', methods=['POST'])
 @app.route('/api/projects', methods=['POST'])
-def create_project():
+@requires_auth('post:project')
+def create_project(payload):
     form = ProjectForm(request.form)
     project_list = []
     project = {}
@@ -193,7 +198,8 @@ def create_project():
 
 @app.route('/projects/<int:project_id>', methods=['PATCH', 'POST'])
 @app.route('/api/projects/<int:project_id>', methods=['PATCH'])
-def update_project(project_id):
+@requires_auth('patch:project')
+def update_project(payload, project_id):
     form = ProjectEditForm(request.form)
     project = {}
     up_project = Project.query.filter(Project.id == project_id).one_or_none()
@@ -242,7 +248,8 @@ def update_project(project_id):
 
 @app.route('/projects/<int:project_id>', methods=['DELETE', 'POST'])
 @app.route('/api/projects/<int:project_id>', methods=['DELETE'])
-def delete_project(project_id):
+@requires_auth('delete:project')
+def delete_project(payload, project_id):
     project= {}
     project_search = Project.query.filter(Project.id == project_id).one_or_none()
     
@@ -273,7 +280,8 @@ def delete_project(project_id):
 
 @app.route('/services/<int:service_id>', methods=['GET'])
 @app.route('/api/services/<int:service_id>', methods=['GET'])
-def get_detail_service(service_id):     
+@requires_auth('get:service-detail')
+def get_detail_service(payload, service_id):     
     form = ServiceForm()
     service = Service.query.filter(Service.id == service_id).one_or_none()
     
@@ -334,7 +342,8 @@ def add_new_service():
 
 @app.route('/services', methods=['POST'])
 @app.route('/api/services', methods=['POST'])
-def create_service():
+@requires_auth('post:service')
+def create_service(payload):
     form = ServiceForm(request.form)
     service_list = []
     service = {}
@@ -383,7 +392,8 @@ def create_service():
 
 @app.route('/services/<int:service_id>', methods=['POST', 'PATCH'])
 @app.route('/api/services/<int:service_id>', methods=['PATCH'])
-def update_service(service_id):
+@requires_auth('patch:service')
+def update_service(payload, service_id):
     form = ServiceForm(request.form)
     service = {}
     
@@ -438,7 +448,8 @@ def update_service(service_id):
 
 @app.route('/services/<int:service_id>', methods=['DELETE', 'POST'])
 @app.route('/api/services/<int:service_id>', methods=['DELETE'])
-def delete_service(service_id):
+@requires_auth('delete:service')
+def delete_service(payload, service_id):
     service = {}
     service_search = Service.query.filter(Service.id == service_id).one_or_none()
     
@@ -468,7 +479,8 @@ def delete_service(service_id):
 
 @app.route('/people/<int:person_id>', methods=['GET'])
 @app.route('/api/people/<int:person_id>', methods=['GET'])
-def get_detail_person(person_id):     
+@requires_auth('get:person-detail')
+def get_detail_person(payload, person_id):     
     form = PersonForm()
     person = Person.query.filter(Person.id == person_id).one_or_none()
     
@@ -490,7 +502,8 @@ def get_detail_person(person_id):
 
 @app.route('/people', methods=['GET'])
 @app.route('/api/people', methods=['GET'])
-def get_people(): 
+@requires_auth('get:person')
+def get_people(payload): 
     people_list = []
     try:
         selection = Person.query.all()
@@ -528,7 +541,8 @@ def add_new_person():
 
 @app.route('/people', methods=['POST'])
 @app.route('/api/people', methods=['POST'])
-def create_person():
+@requires_auth('post:person')
+def create_person(payload):
     form = PersonForm(request.form)
     people_list = []
     person = {}
@@ -581,7 +595,8 @@ def create_person():
 
 @app.route('/people/<int:person_id>', methods=['POST', 'PATCH'])
 @app.route('/api/people/<int:person_id>', methods=['PATCH'])
-def update_person(person_id):
+@requires_auth('patch:person')
+def update_person(payload, person_id):
     form = PersonForm(request.form)   
     person = {}
     
@@ -638,7 +653,8 @@ def update_person(person_id):
 
 @app.route('/people/<int:person_id>', methods=['DELETE'])
 @app.route('/api/people/<int:person_id>', methods=['DELETE'])
-def delete_person(person_id):
+@requires_auth('delete:person')
+def delete_person(payload, person_id):
     person = {}
     person_search = Person.query.filter(Person.id == person_id).one_or_none()
     
@@ -674,6 +690,15 @@ def bad_request(error):
         "message": "Bad request"
         }), 400
 
+@app.errorhandler(401)
+def unauthorized(error):
+        return jsonify({
+            "success": False, 
+            "error": 401,
+            "message": "unauthorized"
+            }), 401
+
+
 @app.errorhandler(404)
 def not_found(error):    
     if request.path.startswith("/api/"): 
@@ -703,7 +728,7 @@ def not_found(error):
         }), 405
 
 @app.errorhandler(500)
-def not_found(error):
+def server_error(error):
     if request.path.startswith("/api/"):    
         return jsonify({
             "success": False, 
