@@ -9,6 +9,9 @@ from flask_cors import CORS
 from auth import AuthError, requires_auth
 
 
+secret_key = os.environ.get('SECRET_KEY')
+
+
 #---------------------------------------------------
 # App Config
 #---------------------------------------------------
@@ -17,12 +20,12 @@ from auth import AuthError, requires_auth
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
+#   app.config.from_object('config')
     bootstrap = Bootstrap(app)
     setup_db(app)
     CORS(app)
     
-    #Temporaly to obtain flash message. Change and delete.
-    app.secret_key = 'many random bytes'
+    app.secret_key = secret_key
     
     return app
 
@@ -692,11 +695,14 @@ def bad_request(error):
 
 @app.errorhandler(401)
 def unauthorized(error):
+    if request.path.startswith("/api/"): 
         return jsonify({
             "success": False, 
             "error": 401,
             "message": "unauthorized"
             }), 401
+    else:
+        return render_template('errors/401.html'), 401
 
 
 @app.errorhandler(404)
@@ -740,10 +746,23 @@ def server_error(error):
 
 
 @app.errorhandler(AuthError)
-def handle_auth_error(ex):
-    response = jsonify(ex.error)
-    response.status_code = ex.status_code
-    return response
+def authentification_failed(ex):
+    if request.path.startswith("/api/"):
+        return jsonify({
+            'success': False,
+            'error': ex.status_code,
+            'message': ex.error['description']
+            }), ex.status_code
+    else:
+        return render_template('errors/401.html'), ex.status_code
+
+
+
+# @app.errorhandler(AuthError)
+# def handle_auth_error(ex):
+#     response = jsonify(ex.error)
+#     response.status_code = ex.status_code
+#     return response
 
 
 # Default port:
