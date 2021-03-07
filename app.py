@@ -15,12 +15,15 @@ from six.moves.urllib.parse import urlencode
 
 
 
-secret_key = os.environ.get('SECRET_KEY')
-client_id = os.environ.get('AUTH0_CLIENT_ID')
-api_base_url = os.environ.get('AUTH0_DOMAIN')
-api_audience = os.environ.get('API_AUDIENCE')
-client_secret = os.environ.get('AUTH0_CLIENT_SECRET')
-callback_url = os.environ.get('AUTH0_CALLBACK_URL')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+AUTH0_CLIENT_ID = os.environ.get('AUTH0_CLIENT_ID')
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+API_BASE_URL = 'https://' + AUTH0_DOMAIN
+API_AUDIENCE = os.environ.get('API_AUDIENCE')
+AUTH0_CLIENT_SECRET = os.environ.get('AUTH0_CLIENT_SECRET')
+AUTH0_CALLBACK_URL = os.environ.get('AUTH0_CALLBACK_URL')
+PROFILE_KEY = os.environ.get('PROFILE_KEY')
+JWT_PAYLOAD = os.environ.get('JWT_PAYLOAD')
 
 
 #---------------------------------------------------
@@ -35,7 +38,7 @@ def create_app(test_config=None):
     bootstrap = Bootstrap(app)
     setup_db(app)
     CORS(app)
-    app.secret_key = secret_key
+    app.secret_key = SECRET_KEY
     
     return app
 
@@ -49,11 +52,11 @@ oauth = OAuth(app)
 
 auth0 = oauth.register(
     'auth0',
-    client_id=client_id,
-    client_secret=client_secret,
-    api_base_url=api_base_url,
-    access_token_url='https://dev-fsnd-2021.us.auth0.com/oauth/token',
-    authorize_url='https://dev-fsnd-2021.us.auth0.com/authorize',
+    client_id=AUTH0_CLIENT_ID,
+    client_secret=AUTH0_CLIENT_SECRET,
+    api_base_url=API_BASE_URL,
+    access_token_url=API_BASE_URL + '/oauth/token',
+    authorize_url=API_BASE_URL + '/authorize',
     client_kwargs={
         'scope': 'openid profile email',
     },
@@ -89,8 +92,15 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 @app.route('/')
 def index():
+    log_in = False
+    userinfo = {}
     gretting = "Wellcome to my APP"
-    return render_template('pages/home.html', gretting=gretting)
+    
+    if 'PROFILE_KEY' in session:
+        userinfo = session['PROFILE_KEY']
+        log_in = True
+    
+    return render_template('pages/home.html', gretting=gretting, userinfo=userinfo, log_in=log_in)
 
 
 #----------------------------------------------------
@@ -100,19 +110,26 @@ def index():
 
 @app.route('/login',  methods=['GET'])
 def login():
-    return auth0.authorize_redirect( 
-        redirect_uri='%s/post-login' % callback_url, 
-    	audience=api_audience)
-
+    return auth0.authorize_redirect(redirect_uri=AUTH0_CALLBACK_URL, audience=API_AUDIENCE)
 
 
 # Here we're using the /callback route.
-@app.route('/post-login',  methods=['GET'])
+@app.route('/callback',  methods=['GET'])
 def callback_handling():
     # Handles response from token endpoint
     token = auth0.authorize_access_token()
     session['token'] = token['access_token']
-    return render_template('pages/home.html')
+    resp = auth0.get('userinfo')
+    userinfo = resp.json()
+    print(userinfo)
+    
+    session['JWT_PAYLOAD'] = userinfo
+    session['PROFILE_KEY'] = {
+        'user_id': userinfo['sub'],
+        'name': userinfo['name'],
+        'picture': userinfo['picture']
+    }    
+    return redirect('/')
 
 
 @app.route('/logout',  methods=['GET'])
@@ -120,8 +137,8 @@ def logout():
     # Clear session stored data
     session.clear()
     # Redirect user to logout endpoint
-    params = {'returnTo': url_for('index', _external=True), 'client_id': client_id}
-    return redirect('https://' + auth0.api_base_url + '/v2/logout?' + urlencode(params))
+    params = {'returnTo': url_for('index', _external=True), 'client_id': AUTH0_CLIENT_ID}
+    return redirect(auth0.api_base_url + '/v2/logout?' + urlencode(params))
 
 #----------------------------------------------------
 # Handler GET request detail service

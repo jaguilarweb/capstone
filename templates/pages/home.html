@@ -6,11 +6,19 @@
 {% endblock %}
 
 {% block content %}
-<h1>{{ gretting }}</h1>
+<h1>{{ gretting }} <em>{{userinfo.name}}</em></h1>
 
-<button class="btn btn-primary" href="/login">Log In</button>
-<button class="btn btn-primary" href="/logout">Logout</button>
-
+<div class="panel panel-warning">
+    <!-- Default panel contents -->
+    <div class="panel-heading">Ingresar</div>
+        <div class="panel-body">            
+            <a href="{{ url_for('login') }}">Log In</a>
+{% if log_in %}
+<a href="{{ url_for('logout') }}">Logout</a>
+{% endif%}
+        </div>
+    </div>
+</div>
 {% endblock %}
 
     

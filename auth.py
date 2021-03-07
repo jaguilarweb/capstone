@@ -148,7 +148,7 @@ def requires_auth(permission=''):
                     token = session['token']
                 else:
                     token = get_token_auth_header()
-                if token is None:
+                if token is None: 
                     abort(401)
                 payload = verify_decode_jwt(token)
                 check_permissions(permission, payload)
