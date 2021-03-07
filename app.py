@@ -112,17 +112,16 @@ def callback_handling():
     # Handles response from token endpoint
     token = auth0.authorize_access_token()
     session['token'] = token['access_token']
-    print(session['token'])
     return render_template('pages/home.html')
 
 
-@app.route('/logout')
+@app.route('/logout',  methods=['GET'])
 def logout():
     # Clear session stored data
     session.clear()
     # Redirect user to logout endpoint
     params = {'returnTo': url_for('index', _external=True), 'client_id': client_id}
-    return redirect(auth0.api_base_url + '/v2/logout?' + urlencode(params))
+    return redirect('https://' + auth0.api_base_url + '/v2/logout?' + urlencode(params))
 
 #----------------------------------------------------
 # Handler GET request detail service
