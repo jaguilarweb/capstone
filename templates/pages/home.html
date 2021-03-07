@@ -8,7 +8,9 @@
 {% block content %}
 <h1>{{ gretting }}</h1>
 
-<button href={{AUTH0_AUTHORIZE_URL}}>Login</button>
+<button class="btn btn-primary" href="/login">Log In</button>
+<button class="btn btn-primary" href="/logout">Logout</button>
+
 {% endblock %}
 
     
