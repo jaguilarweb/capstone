@@ -141,7 +141,7 @@ def logout():
     return redirect(auth0.api_base_url + '/v2/logout?' + urlencode(params))
 
 #----------------------------------------------------
-# Handler GET request detail service
+# Handler GET request detail project
 #----------------------------------------------------
 
 
@@ -370,7 +370,7 @@ def get_detail_service(payload, service_id):
     if request.path == '/api/services/' + str(service_id):
         return jsonify({
             'success': True,
-            'person': service.format()
+            'service': service.format()
         }), 200
 
     return render_template('forms/edit_service.html', service=service, form=form)
@@ -392,18 +392,19 @@ def get_services():
             flash('There are not services.')
 
         service_list = [service.format() for service in selection]
-   
-    except Exception as e:
-        print(e)        
+
+    except:
+        abort(401)
 
     finally:      
-        if request.path == '/api/services':            
+        if request.path == '/api/services':
+            print(len(service_list))            
             return jsonify({
                 'success': True,
                 'services': service_list
             }), 200
             
-        return render_template('pages/services.html', services=selection)
+    return render_template('pages/services.html', services=selection)
 #----------------------------------------------------
 # Handler GET form to create service
 #----------------------------------------------------
