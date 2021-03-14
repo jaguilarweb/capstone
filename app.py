@@ -329,7 +329,6 @@ def create_app(test_config=None):
         
         finally:
             if request.path == '/api/projects/' + str(project_id):
-
                 return jsonify({
                     'success': True,
                     'projects': project
@@ -383,10 +382,10 @@ def create_app(test_config=None):
 
         finally:      
            if request.path == '/api/services':
-            return jsonify({
-                'success': True,
-                'services': service_list
-            }), 200
+                return jsonify({
+                    'success': True,
+                    'services': service_list
+                }), 200
             
         return render_template('pages/services.html', services=selection)
     #----------------------------------------------------
@@ -435,8 +434,8 @@ def create_app(test_config=None):
                 else:
                     flash("Something was wrong. Please try again.")
                         
-        except Exception as e:
-            print(e)
+        except:
+            abort(400)
         
         finally:
             services = Service.query.all()   
@@ -703,7 +702,6 @@ def create_app(test_config=None):
         
         finally:
             if request.path == '/api/people/' + str(person_id):
-
                 return jsonify({
                     'success': True,
                     'person': person
