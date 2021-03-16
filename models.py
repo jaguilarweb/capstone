@@ -22,12 +22,12 @@ def setup_db(app, database_path=database_path):
 class Project(db.Model):
     __tablename__ = 'project'
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=True)
+    name = Column(String, nullable=False)
     kind = Column(String, nullable=True)
     deadline = Column(DateTime, default=datetime.utcnow, nullable=True)
-    word_count = Column(Integer, nullable=True)
-    hour_count = Column(Float, nullable=True)
-    rate = Column(Float, nullable=True)
+    word_count = Column(Integer, default=0, nullable=True)
+    hour_count = Column(Float, default=0.0, nullable=True)
+    rate = Column(Float, default=0.0, nullable=True)
     person_id = Column(Integer, ForeignKey('person.id'), nullable=False)
     service_id = Column(Integer, ForeignKey('service.id'), nullable=False)
     person_child = db.relationship("Person", back_populates='services')
@@ -74,11 +74,11 @@ class Person(db.Model):
     __tablename__ = 'person'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=True)
+    name = Column(String, nullable=False)
     kind = Column(String, nullable=True)
     email = Column(String, nullable=True)
-    ratew = Column(Float, nullable=True)
-    rateh = Column(Float, nullable=True)
+    ratew = Column(Float, default=0.0, nullable=True)
+    rateh = Column(Float, default=0.0, nullable=True)
     services = db.relationship("Project", back_populates="person_child")
 
     def insert(self):
@@ -119,9 +119,9 @@ class Service(db.Model):
     __tablename__ = 'service'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=True)
-    source = Column(String, nullable=True)
-    destiny = Column(String, nullable=True)
+    name = Column(String, nullable=False)
+    source = Column(String, nullable=False)
+    destiny = Column(String, nullable=False)
     people = db.relationship("Project", back_populates="service_child")
 
     def insert(self):
@@ -146,7 +146,7 @@ class Service(db.Model):
         except:
             db.session.rollback()
             print(sys.exc_info())
-    
+
     def format(self):
         return {
             'id': self.id,

@@ -14,13 +14,14 @@ class ProjectForm(FlaskForm):
     deadline = DateTimeField(
         'deadline',
         validators=[DataRequired()]
-    )    
+    )
     person_id = SelectField(
         'person_id', choices=[], coerce=int, validate_choice=False, validators=[InputRequired()]
     )
     service_id = SelectField(
         'service_id', choices=[], coerce=int, validate_choice=False, validators=[InputRequired()]
     )
+
 
 class ProjectEditForm(FlaskForm):
     deadline = DateTimeField(
@@ -36,7 +37,6 @@ class ProjectEditForm(FlaskForm):
     rate = DecimalField(
         'rate'
     )
-
 
 
 class PersonForm(FlaskForm):
@@ -55,7 +55,7 @@ class PersonForm(FlaskForm):
     rateh = DecimalField(
         'rateh', validators=[InputRequired()]
     )
-    
+
 
 class ServiceForm(FlaskForm):
     name = StringField(
@@ -67,5 +67,3 @@ class ServiceForm(FlaskForm):
     destiny = StringField(
         'destiny', validators=[DataRequired()]
     )
-    
-   
