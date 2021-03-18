@@ -8,14 +8,13 @@ The core of this aplication helps to manage translation projects and has a ponde
 
 This application conforms to the REST architectural style, and the API returns JSON-encoded responses and uses standard HTTP response codes. 
 
-You can use too their front-end interface that allow to access a feature that calculate automatically the total of project on depend the individual rates and word counts ponderated.
 
 
 ## Accessing the Translation Management Tool App on the web
 
 This aplication has been deployed to Heroku and is currently working at this link:
 
-http: 
+https://fsnd-capstone-jaguilar.herokuapp.com/
 
 In the home page you can login and logout with two differents roles.
 
@@ -38,6 +37,7 @@ Project Manager login credentials
 User: pm@example.com
 Password: test_pm_1212
 ```
+
 
 ## Installing Dependencies to run local
 #### Python 3.7
