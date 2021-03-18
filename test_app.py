@@ -9,8 +9,8 @@ from models import setup_db, Service
 # Tokens
 # -------------------------------------------
 
-token_manager = ('eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwMDY0ZjNkMTUyMjE4MDA2YTNjYzEwMCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE1OTAzMDI3LCJleHAiOjE2MTU5MTAyMjcsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6cGVyc29uIiwiZGVsZXRlOnByb2plY3QiLCJkZWxldGU6c2VydmljZSIsImdldDpwZXJzb24iLCJnZXQ6cGVyc29uLWRldGFpbCIsImdldDpwcm9qZWN0IiwiZ2V0OnByb2plY3QtZGV0YWlsIiwiZ2V0OnNlcnZpY2UtZGV0YWlsIiwicGF0Y2g6cGVyc29uIiwicGF0Y2g6cHJvamVjdCIsInBhdGNoOnNlcnZpY2UiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCIsInBvc3Q6c2VydmljZSJdfQ.ICnKIrwzxjiRPmR0XXDKDjwVlSzHi5HU152UiTOkfqvDcii7HlmXh-JXwTCRf_05Lpey5Pn-PBE7GBtPqqnLnq80K3Mx6zDt7ZQs2FReHyi4CHkmJUkL8v_e8PE8IjL4YV7DmqPhV-DyffMJnkuyfjTkKZBW4Xjsk1Atm7BLiFUMOQY7zr2jQW-_piainMz68nw6iqcPJKU1-_x3sUnz571x4SSp43KcOqwto3JGaKWEaxO1VOzcyM7nM-kif4dDGYV5SUV0_73Pyrj5NuQhA2YFW7h0YJN07EBq2u7_ueWnqVMD5fl8zHTBN92deI6YJFE47m2KEAnv47jt43mp0Q')
-token_product_manager = ('eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwNDE3NDM5MGQ5ZjcxMDA3MGVlMmY3NSIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE1OTAzMTM5LCJleHAiOjE2MTU5MTAzMzksImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6cGVyc29uIiwiZ2V0OnBlcnNvbi1kZXRhaWwiLCJnZXQ6cHJvamVjdCIsImdldDpwcm9qZWN0LWRldGFpbCIsImdldDpzZXJ2aWNlLWRldGFpbCIsInBhdGNoOnBlcnNvbiIsInBhdGNoOnByb2plY3QiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCJdfQ.isMoOK6vCHl36LwffOjxXeslXcIv0qKYoNEYacKm2zt1wFARuci294TalFEsoXH10EvSWbnGUKYPPnuEGuL7zk3eMlfmvVSm-T5Oe09AXQ726UVd88w3wigZM4i9zgrkPfJcu65wjq4jLz_jAiBxrrTi0_1xm7Vx-vbIsgN4nUWf54WiBnhCDYgRo8EKVI_0cOiUBtCQchQcVYwJPqdkyNd0y4mHb32fPnhT2mjzLRRVp-7I7daYvZVmv_ymUQGnNsIyfyFHw2xEbn5sPqQMNFQW0jig2U5hFUUAhjWGt6BeKgoUiHNs2PdByFFnEtHqXnzMEOEeF0JV46ZGDSzjPA')
+token_manager = ('eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwMDY0ZjNkMTUyMjE4MDA2YTNjYzEwMCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MDg1OTA2LCJleHAiOjE2MTYxNzIzMDYsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6cGVyc29uIiwiZGVsZXRlOnByb2plY3QiLCJkZWxldGU6c2VydmljZSIsImdldDpwZXJzb24iLCJnZXQ6cGVyc29uLWRldGFpbCIsImdldDpwcm9qZWN0IiwiZ2V0OnByb2plY3QtZGV0YWlsIiwiZ2V0OnNlcnZpY2UtZGV0YWlsIiwicGF0Y2g6cGVyc29uIiwicGF0Y2g6cHJvamVjdCIsInBhdGNoOnNlcnZpY2UiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCIsInBvc3Q6c2VydmljZSJdfQ.iivGCCVKDlTaAoQN7ScYbqCaimhrsv4TQ4jfXf0Q8ZuvoRuWv408HdgUNsWlbO8VknoJP8T4CESSj1js1F0BbXbM_13z4CJ8y2mnYNFHUQDmq034ZAeXD18ky-LEZ0OI-FSlZjZa7kvrx0j4dlUtPVeh1F8TFlHPE8lZ-NqmmautlaTdBmD1uhmpMKTh41rIR-LdTGIzk7XZP89SRmfhjg6YwfzT4qXYUkg0UcU0sCC1uqcTRRpL2Qmcnzwd4ydeYKlCP8Y0T0z4cf87hXL5KXOCxg6GGIHeiIPh7wjFOEtXocGe7559me-uQ_WQp1buYtOmanMamwXXftWzfYwE6A')
+token_product_manager = ('eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwNDE3NDM5MGQ5ZjcxMDA3MGVlMmY3NSIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MDc2OTQ3LCJleHAiOjE2MTYxNjMzNDcsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6cGVyc29uIiwiZ2V0OnBlcnNvbi1kZXRhaWwiLCJnZXQ6cHJvamVjdCIsImdldDpwcm9qZWN0LWRldGFpbCIsImdldDpzZXJ2aWNlLWRldGFpbCIsInBhdGNoOnBlcnNvbiIsInBhdGNoOnByb2plY3QiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCJdfQ.iu9hKaTUK1LIu8FLpC61g7CUy8WT4ZqX1JcHgl5W4PZ7G67aKb2ZPsBgKhOKV_wFstHebT-lIeh6w9rC3pTyMtsUq9xm_LdRB55RaxbiFs7mO_H6fsacA46OjgZA1es3XHAWtUJoFG7ODSR4j91KSgr6Kb3uDb5q1pfUVBinHUy35lZMJRVExtNB3uJlGEU1UvGoz6Yin_neqvp89tqccZj2t2vumkX83D-zhWC0_omT0IdNSG-jl5mV0rYHaXbLUbb49JoRLmHV91Yi3z_TYbqaAUCG28fhoqLuhHuWzvcLwjiyfp7gWiMkf2g2ssZTOa6W3mzzaWCmp8D_hPMUIg')
 
 
 class CapstoneTestCase(unittest.TestCase):
@@ -77,7 +77,7 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertTrue(data['services'])
         self.assertTrue(len(data['services']))
 
-    def test_404_not_found(self):
+    def test_404_service_fail_url(self):
         res = self.client().get('/api/servi')
         data = json.loads(res.data)
 
@@ -106,21 +106,13 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Resource Not found')
 
-    def test_401_unauthorized_not_token(self):
+    def test_401_service_unauthorized_not_token(self):
         res = self.client().get('/api/services/2')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'Authorization header is expected.')
 
-    def test_401_unauthorized_false_token(self):
-        res = self.client().get('/api/services/2', headers={'Authorization': 'Bearer ' + 'false_token'})
-        data = json.loads(res.data)
-
-        self.assertEqual(res.status_code, 401)
-        self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'unauthorized')
 
     # -------------------------------------------
     # Unittest Handler POST service ( Manager role required)
@@ -134,13 +126,12 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(data['services'])
 
-    def test_401_unauthorized_permission(self):
+    def test_401_service_unauthorized_permission(self):
         res = self.client().post('/api/services', json=self.new_service, headers={'Authorization': 'Bearer ' + token_product_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'unauthorized')
 
     # -------------------------------------------
     # Unittest Handler PATCH service ( Manager role required)
@@ -167,35 +158,26 @@ class CapstoneTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'unauthorized')
 
     # -------------------------------------------
     # Unittest Handler Delete service ( Manager role required)
     # -------------------------------------------
 
     def test_delete_service(self):
-        res = self.client().delete('/api/services/20', headers={'Authorization': 'Bearer ' + token_manager})
+        res = self.client().delete('/api/services/45', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['services'])
 
-    def test_404_service_not_found(self):
-        res = self.client().delete('/api/services/100', headers={'Authorization': 'Bearer ' + token_manager})
-        data = json.loads(res.data)
-
-        self.assertEqual(res.status_code, 404)
-        self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'Resource Not found')
-
-    def test_401_unauthorized_delete_permission(self):
-        res = self.client().patch('/api/services/4', headers={'Authorization': 'Bearer ' + token_product_manager})
+    def test_401_unauthorized_service_delete_permission(self):
+        res = self.client().delete('/api/services/4', headers={'Authorization': 'Bearer ' + token_product_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'unauthorized')
+
 
     # -------------------------------------------
     # Unittest Handler GET request people (Manager or PM role required)
@@ -210,7 +192,7 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertTrue(data['people'])
         self.assertTrue(len(data['people']))
 
-    def test_404_not_found(self):
+    def test_404_people_error_url(self):
         res = self.client().get('/api/peop', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
@@ -232,7 +214,7 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertTrue(len(data['person']))
 
     def test_404_person_not_found(self):
-        res = self.client().get('/api/people/1000', headers={'Authorization': 'Bearer ' + token_manager})
+        res = self.client().get('/api/people/a', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -281,7 +263,7 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(data['person'])
 
-    def test_401_unauthorized_update_permission(self):
+    def test_401_unauthorized_person_update_permission(self):
         res = self.client().patch('/api/people/2', json={
             "name": "Neil",
             "ratew": 0.01,
@@ -290,22 +272,32 @@ class CapstoneTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'Authorization header is expected.')
 
+    def test_404_person_to_update_not_found(self):
+        res = self.client().patch('/api/people/10000', json={
+            "name": "Neil",
+            "ratew": 0.05,
+            "rateh": 10.0},
+            headers={'Authorization': 'Bearer ' + token_manager})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Resource Not found')
     # -------------------------------------------
     # Unittest Handler Delete people (Manager role required)
     # -------------------------------------------
 
     def test_delete_people(self):
-        res = self.client().delete('/api/people/15', headers={'Authorization': 'Bearer ' + token_manager})
+        res = self.client().delete('/api/people/35', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['person'])
 
-    def test_404_person_not_found(self):
-        res = self.client().delete('/api/people/100', headers={'Authorization': 'Bearer ' + token_manager})
+    def test_404_person_to_delete_not_found(self):
+        res = self.client().delete('/api/people/1000', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -318,7 +310,7 @@ class CapstoneTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'Authorization header is expected.')
+
 
     # -------------------------------------------
     # Unittest Handler GET request project (Manager or PM role required)
@@ -333,7 +325,7 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertTrue(data['projects'])
         self.assertTrue(len(data['projects']))
 
-    def test_404_not_found(self):
+    def test_404_project_not_found(self):
         res = self.client().get('/api/projects/ads', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
@@ -346,7 +338,7 @@ class CapstoneTestCase(unittest.TestCase):
     # -------------------------------------------
 
     def test_get_detail_project(self):
-        res = self.client().get('/api/projects/1', headers={'Authorization': 'Bearer ' + token_manager})
+        res = self.client().get('/api/projects/1', headers={'Authorization': 'Bearer ' + token_product_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -354,8 +346,8 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertTrue(data['project'])
         self.assertTrue(len(data['project']))
 
-    def test_404_person_not_found(self):
-        res = self.client().get('/api/projects/1000', headers={'Authorization': 'Bearer ' + token_manager})
+    def test_404_project_detail_not_found(self):
+        res = self.client().get('/api/projects/1000', headers={'Authorization': 'Bearer ' + token_product_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -411,21 +403,20 @@ class CapstoneTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'Authorization header is expected.')
 
     # -------------------------------------------
     # Unittest Handler Delete projects (Manager role required)
     # -------------------------------------------
 
     def test_delete_projects(self):
-        res = self.client().delete('/api/projects/9', headers={'Authorization': 'Bearer ' + token_manager})
+        res = self.client().delete('/api/projects/27', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['projects'])
 
-    def test_404_project_not_found(self):
+    def test_404_project_to_delete_not_found(self):
         res = self.client().delete('/api/projects/1000', headers={'Authorization': 'Bearer ' + token_manager})
         data = json.loads(res.data)
 
@@ -434,12 +425,11 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Resource Not found')
 
     def test_401_unauthorized_delete_project_permission(self):
-        res = self.client().patch('/api/projects/3')
+        res = self.client().delete('/api/projects/3')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'], 'Authorization header is expected.')
 
 
 # Make the tests conveniently executable
