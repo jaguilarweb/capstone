@@ -4,22 +4,22 @@
 
 **Translation Management Tool App** is my FSND final project. 
 
-The core of this aplication helps to manage translation projects and has a ponderate word count calculator tool in the front-end that support to the project managers to manage assign workloads to translators.
+The core of this application helps to manage translation projects and it has a weighted word count calculator tool in the front-end that brings support to the project managers when managing workloads to translators.
 
-This application conforms to the REST architectural style, and the API returns JSON-encoded responses and uses standard HTTP response codes. 
+This application follow a REST architectural style and the API returns JSON-encoded responses, and it uses standard HTTP response codes. 
 
 
 ## Accessing the Translation Management Tool App on the web
 
-This aplication has been deployed to Heroku and is currently working at this link:
+This application has been deployed in Heroku and it is currently working at this link:
 
 https://fsnd-capstone-jaguilar.herokuapp.com/
 
-In the home page you can login and logout with two differents roles.
+In the home page you can login and logout with two different roles.
 
 
 ### Manager: 
-Full access, with the ability to get details views, list, update, and delete all entities.
+Full access, with the ability to get details views, and to list, update, and delete all entities.
 
 ```
 Manager login credentials
@@ -31,15 +31,13 @@ Password: test_manager_2020
 Token (which can be expired at - "2021-03-19 / 19:09:51 / GMT-03000"):
 ```
 
-```
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwMDY0ZjNkMTUyMjE4MDA2YTNjYzEwMCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MTA1MzkxLCJleHAiOjE2MTYxOTE3OTEsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6cGVyc29uIiwiZGVsZXRlOnByb2plY3QiLCJkZWxldGU6c2VydmljZSIsImdldDpwZXJzb24iLCJnZXQ6cGVyc29uLWRldGFpbCIsImdldDpwcm9qZWN0IiwiZ2V0OnByb2plY3QtZGV0YWlsIiwiZ2V0OnNlcnZpY2UtZGV0YWlsIiwicGF0Y2g6cGVyc29uIiwicGF0Y2g6cHJvamVjdCIsInBhdGNoOnNlcnZpY2UiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCIsInBvc3Q6c2VydmljZSJdfQ.Zby-co_aKcajUJLQF6l6ad6y_wkFdPxqDuUq_5wFocf-OFCEG-MmJt9LmNfuAy-rkUPCI9glvJZmAl-Irb4n5ZaK-SEZnfkO-OnCCSnvbtb5HUKf2jC5Ouz5Y0oGVWsmsbl6v4C1EkiF-R7hVGFCw_xFm3K5XKPRkdEckFm0x09ARs7JvL1yOECZHKLdSMnEnVReJY2zHFF_sPZFNhmuMwO7KhthR-51wexz5Di6asDNaZRd-A1E3L0jOmYvEA91adSQC_GhVaGsHWXCyPpd_TMJ3mC4w1hx0RMTGw2Td-047Pu_jT9oOvNeFjbo_gAhdihbLqANaq2nd7_ib6q_3A
-```
+`eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwMDY0ZjNkMTUyMjE4MDA2YTNjYzEwMCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MTA1MzkxLCJleHAiOjE2MTYxOTE3OTEsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6cGVyc29uIiwiZGVsZXRlOnByb2plY3QiLCJkZWxldGU6c2VydmljZSIsImdldDpwZXJzb24iLCJnZXQ6cGVyc29uLWRldGFpbCIsImdldDpwcm9qZWN0IiwiZ2V0OnByb2plY3QtZGV0YWlsIiwiZ2V0OnNlcnZpY2UtZGV0YWlsIiwicGF0Y2g6cGVyc29uIiwicGF0Y2g6cHJvamVjdCIsInBhdGNoOnNlcnZpY2UiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCIsInBvc3Q6c2VydmljZSJdfQ.Zby-co_aKcajUJLQF6l6ad6y_wkFdPxqDuUq_5wFocf-OFCEG-MmJt9LmNfuAy-rkUPCI9glvJZmAl-Irb4n5ZaK-SEZnfkO-OnCCSnvbtb5HUKf2jC5Ouz5Y0oGVWsmsbl6v4C1EkiF-R7hVGFCw_xFm3K5XKPRkdEckFm0x09ARs7JvL1yOECZHKLdSMnEnVReJY2zHFF_sPZFNhmuMwO7KhthR-51wexz5Di6asDNaZRd-A1E3L0jOmYvEA91adSQC_GhVaGsHWXCyPpd_TMJ3mC4w1hx0RMTGw2Td-047Pu_jT9oOvNeFjbo_gAhdihbLqANaq2nd7_ib6q_3A`
 
 ### Project Manager: 
-Limit access, with the ability to:
-- Get lists and details view to all entities
-- Update and Create people and projects
-- Delete records is not allowed
+Limited access with the following features:
+- Get lists and detail view to all entities;
+- Update and create people and project objects;
+- Deletion of records is not allowed.
 
 ```
 Project Manager login credentials
@@ -51,44 +49,42 @@ Password: test_pm_1212
 Token (which can be expired at - "2021-03-19 / 19:17:01 / GMT-03000"):
 ```
 
-```
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwNDE3NDM5MGQ5ZjcxMDA3MGVlMmY3NSIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MTA1ODIxLCJleHAiOjE2MTYxOTIyMjEsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6cGVyc29uIiwiZ2V0OnBlcnNvbi1kZXRhaWwiLCJnZXQ6cHJvamVjdCIsImdldDpwcm9qZWN0LWRldGFpbCIsImdldDpzZXJ2aWNlLWRldGFpbCIsInBhdGNoOnBlcnNvbiIsInBhdGNoOnByb2plY3QiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCJdfQ.Kr23IiwBgKt9B4lr4qBzxl-7V6jhzBCp-AEGk_MO8hGxefzDx3cHplrXLHlpuRmidnS2t68OLztcpbGT6leISA_4ijAXCWUwBvDEHa_lYgHgMN1FXkiHVd9GEDiBYGeWjfo7gQXaLdGAtP-ZD1E720bREZghF4usOzenmov-PDLDaEnbWbbQkQuw_PtbfOZ7RnH2ZQ1c7_t9ZGEieMKQlRCctEyvYj4wNhimExkkTfPQ0JqD_yaObdumJulfuKxnOY-FqCQ10YXjR7Eb5ArXF_Y25vAxfrWw66d0svlPV4pRYibB6HAf4zl7nbbN8RxADiutpKACtMatv5PFzRWVzA
-```
+`eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwNDE3NDM5MGQ5ZjcxMDA3MGVlMmY3NSIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MTA1ODIxLCJleHAiOjE2MTYxOTIyMjEsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6cGVyc29uIiwiZ2V0OnBlcnNvbi1kZXRhaWwiLCJnZXQ6cHJvamVjdCIsImdldDpwcm9qZWN0LWRldGFpbCIsImdldDpzZXJ2aWNlLWRldGFpbCIsInBhdGNoOnBlcnNvbiIsInBhdGNoOnByb2plY3QiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCJdfQ.Kr23IiwBgKt9B4lr4qBzxl-7V6jhzBCp-AEGk_MO8hGxefzDx3cHplrXLHlpuRmidnS2t68OLztcpbGT6leISA_4ijAXCWUwBvDEHa_lYgHgMN1FXkiHVd9GEDiBYGeWjfo7gQXaLdGAtP-ZD1E720bREZghF4usOzenmov-PDLDaEnbWbbQkQuw_PtbfOZ7RnH2ZQ1c7_t9ZGEieMKQlRCctEyvYj4wNhimExkkTfPQ0JqD_yaObdumJulfuKxnOY-FqCQ10YXjR7Eb5ArXF_Y25vAxfrWw66d0svlPV4pRYibB6HAf4zl7nbbN8RxADiutpKACtMatv5PFzRWVzA`
 
 
 ## Installing Dependencies to run local
 #### Python 3.7
 
-Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+Pleasem follow the instructions to install the latest version of Python for your platform from [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
-#### Virtual Enviornment
+#### Virtual Environment
 
-We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+It is recommended to work within virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virtual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
 
 #### PIP Dependencies
 
-Once you have your virtual environment setup and running, install dependencies running:
+Once you have completed the virtual environment setup and running, please install the key dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-This will install all of the required packages we selected within the `requirements.txt` file.
+This command will install all the required packages we selected within the `requirements.txt` file.
 
 ##### Key Dependencies
 
 - [Flask](http://flask.pocoo.org/)  is a lightweight backend microservices framework. Flask is required to handle requests and responses.
 
-- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py. 
+- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use to handle the lightweight sqlite database. You will primarily work in app.py and may reference models.py. 
 
 - [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
 
 
 ## Running the server
 
-First, ensure you are working using your created virtual environment.
+First, please ensure you are working using your created virtual environment.
 
-To run the server, execute:
+To run the server, plese execute these commands:
 
 ```bash
 source setup.sh
@@ -151,10 +147,10 @@ flask run
 ### POST '/services'
 
 -	General:
-    *	This endpoint create new service, which will require the name, source, and destiny.
-    *	Returns the success value and services list.
+    *	This endpoint create a new service, which will require the name, source, and destination.
+    *	It returns the success value and service list.
 -	Authorization:
-    *	Authorization requiered. 
+    *	Authorization required. 
 
 - Sample: curl -X POST -H "Authorization: Bearer **ADD_TOKEN**" -H "Content-Type: application/json" -d '{"name":"Translation", "source":"English", "destiny":"Spanish"}' http://127.0.0.1:5000/api/services
 
@@ -170,7 +166,7 @@ flask run
         {
             "destiny": "Spanish",
             "id": 2,
-            "name": "Interpratation",
+            "name": "Interpretation",
             "source": "English"
         },
         {
@@ -187,10 +183,10 @@ flask run
 ### DELETE '/services/{service_id}'
 
 -	General:
-    *	Deletes the service of the given ID if it exists. Returns success value, and all values of the deleted service.
+    *	It deletes the service of the given ID if it exists. It returns a success value, and all values of the deleted service.
 
 -	Authorization:
-    *	Authorization requiered.
+    *	Authorization required.
 
 -	Sample: curl -X DELETE -H "Authorization: Bearer **ADD_TOKEN**"  http://127.0.0.1:5000/api/services/4
 
@@ -267,10 +263,10 @@ flask run
 ### POST '/people'
 
 -	General:
-    *	This endpoint create new person, which will require the name, email, rate per word and rate per hour.
-    *	Returns the success value and people list.
+    *	This endpoint create a new person, which will require the name, email, rate per word and rate per hour.
+    *	It returns the success value and people list.
 -	Authorization:
-    *	Authorization requiered. 
+    *	Authorization required. 
 
 - Sample: curl -X POST -H "Authorization: Bearer **ADD_TOKEN**" -H "Content-Type: application/json" -d '{"name":"Alexander Fuentes", "kind":"Freelance", "email":"alexs@prueba.com", "ratew":0.2, "rateh":3.0}' http://127.0.0.1:5000/api/people
 
@@ -301,10 +297,10 @@ flask run
 ### DELETE '/people/{person_id}'
 
 -	General:
-    *	Deletes the person of the given ID if it exists. Returns success value, and all values of the deleted person.
+    *	It delete the person of the given ID if it exists. It returns success value, and all values of the deleted person.
 
 -	Authorization:
-    *	Authorization requiered.
+    *	Authorization required.
 
 -	Sample: curl -X DELETE -H "Authorization: Bearer **ADD_TOKEN**"  http://127.0.0.1:5000/api/people/1
 
@@ -391,10 +387,10 @@ flask run
 ### POST '/projects'
 
 -	General:
-    *	This endpoint create new project, which will require the name, kind, deadline, person id and service id.
-    *	Returns the success value and projects list.
+    *	This endpoint create a new project, which will require the name, kind, deadline, person id and service id.
+    *	It returns the success value and projects list.
 -	Authorization:
-    *	Authorization requiered. 
+    *	Authorization required. 
 
 - Sample: curl -X POST -H "Authorization: Bearer **ADD_TOKEN**" -H "Content-Type: application/json" -d '{"name":"Pro_032021", "kind":"Project", "deadline":"2021-04-05", "person_id":2, "service_id":2}' http://127.0.0.1:5000/api/projects
 
@@ -431,10 +427,10 @@ flask run
 ### DELETE '/projects/{project_id}'
 
 -	General:
-    *	Deletes the project of the given ID if it exists. Returns success value, and all values of the deleted project.
+    *	It deletes the project of the given ID if it exists. It returns success value, and all values of the deleted project.
 
 -	Authorization:
-    *	Authorization requiered.
+    *	Authorization required.
 
 -	Sample: curl -X DELETE -H "Authorization: Bearer **ADD_TOKEN**"  http://127.0.0.1:5000/api/projects/2
 
@@ -468,7 +464,7 @@ Errors are returned as JSON objects in the following format:
 }
 ```
 
-The API will return three error types when requests fail:
+The API will return the these error types when the requests fails:
 -	400: Bad Request
 -	404: Resource Not found
 -	405: Method not allowed
@@ -478,7 +474,7 @@ The API will return three error types when requests fail:
 
 
 ## Testing
-To run the tests, create an alternative database. In this case capstone_test.
+To run the tests, you should create an alternative database. In this case capstone_test.
 ```
 dropdb capstone_test
 createdb capstone_test
@@ -487,4 +483,4 @@ python test_app.py
 
 ## Authors
 
-This aplication and documentation were created by Jenny Aguilar.
+These application and documentation were created by Jenny Aguilar.

@@ -74,7 +74,7 @@ def create_app(test_config=None):
     def index():
         log_in = False
         userinfo = {}
-        gretting = "Wellcome to my APP"
+        gretting = "Welcome to my APP"
 
         if 'PROFILE_KEY' in session:
             userinfo = session['PROFILE_KEY']
@@ -98,7 +98,6 @@ def create_app(test_config=None):
         session['token'] = token['access_token']
         resp = auth0.get('userinfo')
         userinfo = resp.json()
-        print(userinfo)
 
         session['JWT_PAYLOAD'] = userinfo
         session['PROFILE_KEY'] = {
@@ -159,8 +158,8 @@ def create_app(test_config=None):
 
             project_list = [project.format() for project in selection]
 
-        except Exception as e:
-            print(e)
+        except:
+            abort(400)
 
         finally:
             if request.path == '/api/projects':
@@ -228,8 +227,8 @@ def create_app(test_config=None):
                 else:
                     flash("Something was wrong. Please try again.")
 
-        except Exception as e:
-            print(e)
+        except:
+            abort(400)
 
         finally:
             projects = Project.query.all()

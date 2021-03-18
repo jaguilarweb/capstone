@@ -113,7 +113,6 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
 
-
     # -------------------------------------------
     # Unittest Handler POST service ( Manager role required)
     # -------------------------------------------
@@ -177,7 +176,6 @@ class CapstoneTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-
 
     # -------------------------------------------
     # Unittest Handler GET request people (Manager or PM role required)
@@ -310,7 +308,6 @@ class CapstoneTestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-
 
     # -------------------------------------------
     # Unittest Handler GET request project (Manager or PM role required)

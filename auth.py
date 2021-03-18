@@ -145,17 +145,17 @@ def requires_auth(permission=''):
         @wraps(f)
         def wrapper(*args, **kwargs):
                 token = None
-                
+
                 if 'token' in session:
                     token = session['token']
                 else:
                     token = get_token_auth_header()
-                
+
                 if token is None:
                     abort(401)
-                                
+
                 payload = verify_decode_jwt(token)
-                
+
                 if not check_permissions(permission, payload):
                     abort(401)
                 return f(payload, *args, **kwargs)
