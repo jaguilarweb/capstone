@@ -9,7 +9,6 @@ The core of this aplication helps to manage translation projects and has a ponde
 This application conforms to the REST architectural style, and the API returns JSON-encoded responses and uses standard HTTP response codes. 
 
 
-
 ## Accessing the Translation Management Tool App on the web
 
 This aplication has been deployed to Heroku and is currently working at this link:
@@ -21,10 +20,19 @@ In the home page you can login and logout with two differents roles.
 
 ### Manager: 
 Full access, with the ability to get details views, list, update, and delete all entities.
+
 ```
 Manager login credentials
 User: manager@example.com
 Password: test_manager_2020 
+```
+
+```
+Token (which can be expired at - "2021-03-19 / 19:09:51 / GMT-03000"):
+```
+
+```
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwMDY0ZjNkMTUyMjE4MDA2YTNjYzEwMCIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MTA1MzkxLCJleHAiOjE2MTYxOTE3OTEsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6cGVyc29uIiwiZGVsZXRlOnByb2plY3QiLCJkZWxldGU6c2VydmljZSIsImdldDpwZXJzb24iLCJnZXQ6cGVyc29uLWRldGFpbCIsImdldDpwcm9qZWN0IiwiZ2V0OnByb2plY3QtZGV0YWlsIiwiZ2V0OnNlcnZpY2UtZGV0YWlsIiwicGF0Y2g6cGVyc29uIiwicGF0Y2g6cHJvamVjdCIsInBhdGNoOnNlcnZpY2UiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCIsInBvc3Q6c2VydmljZSJdfQ.Zby-co_aKcajUJLQF6l6ad6y_wkFdPxqDuUq_5wFocf-OFCEG-MmJt9LmNfuAy-rkUPCI9glvJZmAl-Irb4n5ZaK-SEZnfkO-OnCCSnvbtb5HUKf2jC5Ouz5Y0oGVWsmsbl6v4C1EkiF-R7hVGFCw_xFm3K5XKPRkdEckFm0x09ARs7JvL1yOECZHKLdSMnEnVReJY2zHFF_sPZFNhmuMwO7KhthR-51wexz5Di6asDNaZRd-A1E3L0jOmYvEA91adSQC_GhVaGsHWXCyPpd_TMJ3mC4w1hx0RMTGw2Td-047Pu_jT9oOvNeFjbo_gAhdihbLqANaq2nd7_ib6q_3A
 ```
 
 ### Project Manager: 
@@ -32,10 +40,19 @@ Limit access, with the ability to:
 - Get lists and details view to all entities
 - Update and Create people and projects
 - Delete records is not allowed
+
 ```
 Project Manager login credentials
 User: pm@example.com
 Password: test_pm_1212
+```
+
+```
+Token (which can be expired at - "2021-03-19 / 19:17:01 / GMT-03000"):
+```
+
+```
+eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlVudTVmRzc2NHRYM2RTeTBfU3A1UCJ9.eyJpc3MiOiJodHRwczovL2Rldi1mc25kLTIwMjEudXMuYXV0aDAuY29tLyIsInN1YiI6ImF1dGgwfDYwNDE3NDM5MGQ5ZjcxMDA3MGVlMmY3NSIsImF1ZCI6ImNhcHN0b25lIiwiaWF0IjoxNjE2MTA1ODIxLCJleHAiOjE2MTYxOTIyMjEsImF6cCI6IkZxNjlTbTNMSTFRbDBKb3k4cmpVQ2VobTNlMk1xcHFSIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6cGVyc29uIiwiZ2V0OnBlcnNvbi1kZXRhaWwiLCJnZXQ6cHJvamVjdCIsImdldDpwcm9qZWN0LWRldGFpbCIsImdldDpzZXJ2aWNlLWRldGFpbCIsInBhdGNoOnBlcnNvbiIsInBhdGNoOnByb2plY3QiLCJwb3N0OnBlcnNvbiIsInBvc3Q6cHJvamVjdCJdfQ.Kr23IiwBgKt9B4lr4qBzxl-7V6jhzBCp-AEGk_MO8hGxefzDx3cHplrXLHlpuRmidnS2t68OLztcpbGT6leISA_4ijAXCWUwBvDEHa_lYgHgMN1FXkiHVd9GEDiBYGeWjfo7gQXaLdGAtP-ZD1E720bREZghF4usOzenmov-PDLDaEnbWbbQkQuw_PtbfOZ7RnH2ZQ1c7_t9ZGEieMKQlRCctEyvYj4wNhimExkkTfPQ0JqD_yaObdumJulfuKxnOY-FqCQ10YXjR7Eb5ArXF_Y25vAxfrWw66d0svlPV4pRYibB6HAf4zl7nbbN8RxADiutpKACtMatv5PFzRWVzA
 ```
 
 
@@ -69,7 +86,7 @@ This will install all of the required packages we selected within the `requireme
 
 ## Running the server
 
-First ensure you are working using your created virtual environment.
+First, ensure you are working using your created virtual environment.
 
 To run the server, execute:
 
